@@ -19,12 +19,19 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0.0
  */
 @Configuration
-@EnableConfigurationProperties(GraylogApiProperties.class)
+@EnableConfigurationProperties({ GraylogSdkProperties.class, GraylogApiProperties.class })
 public class GraylogSdkAutoConfiguration {
+
+    private final GraylogSdkProperties graylogSdkProperties;
 
     private final GraylogApiProperties graylogApiProperties;
 
-    public GraylogSdkAutoConfiguration(GraylogApiProperties graylogApiProperties) {
+    public GraylogSdkAutoConfiguration(
+        GraylogSdkProperties graylogSdkProperties,
+        GraylogApiProperties graylogApiProperties
+    ) {
+
+        this.graylogSdkProperties = graylogSdkProperties;
         this.graylogApiProperties = graylogApiProperties;
     }
 
@@ -55,7 +62,7 @@ public class GraylogSdkAutoConfiguration {
     ) {
 
         GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
-        SearchAbsolute absolute = new SearchAbsolute(request);
+        SearchAbsolute absolute = new SearchAbsolute(request, graylogSdkProperties);
 
         return new GraylogSearch(absolute);
     }

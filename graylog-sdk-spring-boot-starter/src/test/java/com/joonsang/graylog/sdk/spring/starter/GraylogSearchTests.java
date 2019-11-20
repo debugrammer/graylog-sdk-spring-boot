@@ -1,6 +1,8 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
+import com.joonsang.graylog.sdk.spring.starter.constant.TimeUnit;
+import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
 import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
 import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +50,23 @@ class GraylogSearchTests {
 	}
 
 	@Test
-	void TC_002_TERMS() throws IOException {
+	void TC_002_HISTOGRAM() throws IOException {
+		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+		Histogram histogram = graylogSearch.getHistogram(
+			GRAYLOG_STREAM_ID,
+			TimeUnit.HOUR,
+			from,
+			to,
+			"message:API_REQUEST_FINISHED"
+		);
+
+		assertThat(histogram).isNotNull();
+	}
+
+	@Test
+	void TC_003_TERMS() throws IOException {
 		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 

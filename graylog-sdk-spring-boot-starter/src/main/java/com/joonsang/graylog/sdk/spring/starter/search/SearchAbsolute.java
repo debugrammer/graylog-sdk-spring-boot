@@ -3,9 +3,8 @@ package com.joonsang.graylog.sdk.spring.starter.search;
 import com.jayway.jsonpath.JsonPath;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.GraylogUtils;
-import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
-import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
-import com.joonsang.graylog.sdk.spring.starter.domain.TermsData;
+import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import okhttp3.HttpUrl;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,8 +21,15 @@ public class SearchAbsolute {
 
     private final GraylogRequest graylogRequest;
 
-    public SearchAbsolute(GraylogRequest graylogRequest) {
+    private final GraylogSdkProperties graylogSdkProperties;
+
+    public SearchAbsolute(
+        GraylogRequest graylogRequest,
+        GraylogSdkProperties graylogSdkProperties
+    ) {
+
         this.graylogRequest = graylogRequest;
+        this.graylogSdkProperties = graylogSdkProperties;
     }
 
     public Statistics getStatistics(
@@ -57,6 +63,48 @@ public class SearchAbsolute {
         statistics.setCardinality(JsonPath.parse(body).read("$.cardinality", Integer.class));
 
         return statistics;
+    }
+
+    public Histogram getHistogram(
+        String query,
+        String interval,
+        String from,
+        String to,
+        String filter
+    ) throws IOException {
+
+        HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()
+            .addPathSegments("api/search/universal/absolute/histogram")
+            .addQueryParameter("query", query)
+            .addQueryParameter("interval", interval)
+            .addQueryParameter("from", from)
+            .addQueryParameter("to", to)
+            .addQueryParameter("filter", filter)
+            .build();
+
+        String body = graylogRequest.httpGetRequest(httpUrl);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Integer> resultMap = JsonPath.parse(body).read("$.results", Map.class);
+
+        Map<Long, Integer> sortedResult = new TreeMap<>();
+
+        for (Map.Entry<String, Integer> entry : resultMap.entrySet()) {
+            sortedResult.put(Long.valueOf(entry.getKey()), entry.getValue());
+        }
+
+        List<HistogramData> results = new ArrayList<>();
+
+        for (Map.Entry<Long, Integer> entry : sortedResult.entrySet()) {
+            HistogramData histogramData = new HistogramData(
+                GraylogUtils.convertTimestampToStringDate(graylogSdkProperties.getTimezone(), entry.getKey(), interval),
+                entry.getValue()
+            );
+
+            results.add(histogramData);
+        }
+
+        return new Histogram(results);
     }
 
     public Terms getTerms(
