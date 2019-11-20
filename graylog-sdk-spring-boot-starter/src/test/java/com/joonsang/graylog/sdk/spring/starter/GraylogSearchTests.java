@@ -34,7 +34,7 @@ class GraylogSearchTests {
 	GraylogSearch graylogSearch;
 
 	@Test
-	void TC_001_STATISTICS() throws IOException {
+	void statistics() throws IOException {
 		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -50,7 +50,7 @@ class GraylogSearchTests {
 	}
 
 	@Test
-	void TC_002_HISTOGRAM() throws IOException {
+	void histogram() throws IOException {
 		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -66,7 +66,7 @@ class GraylogSearchTests {
 	}
 
 	@Test
-	void TC_003_TERMS() throws IOException {
+	void terms() throws IOException {
 		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
