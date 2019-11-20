@@ -11,8 +11,7 @@ import java.io.Serializable;
 /**
  * Statistics Domain
  * @author debugrammer
- * @version 1.0
- * @since 2019-11-18
+ * @since 1.0.0
  */
 @Getter
 @Setter

@@ -7,8 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Graylog API Properties
  * @author debugrammer
- * @version 1.0
- * @since 2019-11-18
+ * @since 1.0.0
  */
 @Getter
 @Setter

@@ -2,6 +2,8 @@ package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
 import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
+import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +44,26 @@ class GraylogSearchTests {
 			"message:API_REQUEST_FINISHED"
 		);
 
-		assertThat(statistics)
-			.isNotNull();
+		assertThat(statistics).isNotNull();
+	}
+
+	@Test
+	void TC_002_TERMS() throws IOException {
+		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+		Terms terms = graylogSearch.getTerms(
+			GRAYLOG_STREAM_ID,
+			"process_time",
+			StringUtils.EMPTY,
+			5,
+			from,
+			to,
+			false,
+			false,
+			"message:API_REQUEST_FINISHED"
+		);
+
+		assertThat(terms).isNotNull();
 	}
 }

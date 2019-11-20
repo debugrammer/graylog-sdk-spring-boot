@@ -5,8 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 /**
  * Graylog SDK Utils
  * @author debugrammer
- * @version 1.0
- * @since 2019-11-20
+ * @since 1.0.0
  */
 public class GraylogUtils {
 

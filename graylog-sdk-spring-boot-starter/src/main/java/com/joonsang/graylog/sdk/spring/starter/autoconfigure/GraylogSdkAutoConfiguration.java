@@ -16,8 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Graylog SDK Auto Configuration
  * @author debugrammer
- * @version 1.0
- * @since 2019-11-20
+ * @since 1.0.0
  */
 @Configuration
 @EnableConfigurationProperties(GraylogApiProperties.class)

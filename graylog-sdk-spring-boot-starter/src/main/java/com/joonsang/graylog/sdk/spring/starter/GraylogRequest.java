@@ -12,8 +12,7 @@ import java.util.Objects;
 /**
  * Graylog REST API Request
  * @author debugrammer
- * @version 1.0
- * @since 2019-11-19
+ * @since 1.0.0
  */
 public class GraylogRequest {
 
