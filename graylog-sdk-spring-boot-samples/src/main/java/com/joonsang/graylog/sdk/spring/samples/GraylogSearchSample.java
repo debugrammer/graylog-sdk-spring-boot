@@ -18,7 +18,7 @@ public class GraylogSearchSample {
     private final GraylogSearch graylogSearch;
 
     public GraylogSearchSample(
-        @Value("${graylog.api.streamId}") String streamId,
+        @Value("${graylog.streamId}") String streamId,
         GraylogSearch graylogSearch
     ) {
 

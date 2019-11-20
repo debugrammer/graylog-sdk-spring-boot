@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 )
 class GraylogSearchTests {
 
-	@Value("${graylog.api.streamId}")
+	@Value("${graylog.streamId}")
 	String STREAM_ID;
 
 	@Autowired
