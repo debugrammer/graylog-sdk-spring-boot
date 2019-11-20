@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "name": "graylog.sdk.api",
+      "type": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "graylog.sdk.api.scheme",
+      "type": "java.lang.String",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "description": "Graylog REST API scheme."
+    },
+    {
+      "name": "graylog.sdk.api.host",
+      "type": "java.lang.String",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "description": "Graylog REST API host."
+    },
+    {
+      "name": "graylog.sdk.api.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "description": "Graylog REST API port."
+    },
+    {
+      "name": "graylog.sdk.api.credentials",
+      "type": "java.lang.String",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "description": "Graylog REST API credentials."
+    }
+  ],
+  "hints": []
+}
