@@ -13,16 +13,16 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class GraylogSearchSample {
 
-    private final String STREAM_ID;
+    private final String GRAYLOG_STREAM_ID;
 
     private final GraylogSearch graylogSearch;
 
     public GraylogSearchSample(
-        @Value("${graylog.streamId}") String streamId,
+        @Value("${graylog.streamId}") String graylogStreamId,
         GraylogSearch graylogSearch
     ) {
 
-        this.STREAM_ID = streamId;
+        this.GRAYLOG_STREAM_ID = graylogStreamId;
         this.graylogSearch = graylogSearch;
     }
 
@@ -34,7 +34,7 @@ public class GraylogSearchSample {
             .field("message", "API_REQUEST_FINISHED");
 
         return graylogSearch.getStatistics(
-            STREAM_ID,
+            GRAYLOG_STREAM_ID,
             "process_time",
             from,
             to,

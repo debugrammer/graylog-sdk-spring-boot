@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GraylogSearchTests {
 
 	@Value("${graylog.streamId}")
-	String STREAM_ID;
+	String GRAYLOG_STREAM_ID;
 
 	@Autowired
 	GraylogSearch graylogSearch;
@@ -35,7 +35,7 @@ class GraylogSearchTests {
 		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 		Statistics statistics = graylogSearch.getStatistics(
-			STREAM_ID,
+			GRAYLOG_STREAM_ID,
 			"process_time",
 			from,
 			to,
