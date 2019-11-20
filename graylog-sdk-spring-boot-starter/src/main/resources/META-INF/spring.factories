@@ -1,3 +1,3 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogAutoConfiguration
+com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration

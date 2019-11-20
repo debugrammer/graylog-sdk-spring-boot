@@ -20,13 +20,13 @@ import java.util.concurrent.TimeUnit;
  * @since 2019-11-20
  */
 @Configuration
-@EnableConfigurationProperties(GraylogProperties.class)
-public class GraylogAutoConfiguration {
+@EnableConfigurationProperties(GraylogApiProperties.class)
+public class GraylogSdkAutoConfiguration {
 
-    private final GraylogProperties graylogProperties;
+    private final GraylogApiProperties graylogApiProperties;
 
-    public GraylogAutoConfiguration(GraylogProperties graylogProperties) {
-        this.graylogProperties = graylogProperties;
+    public GraylogSdkAutoConfiguration(GraylogApiProperties graylogApiProperties) {
+        this.graylogApiProperties = graylogApiProperties;
     }
 
     @Bean
@@ -40,7 +40,7 @@ public class GraylogAutoConfiguration {
 
         builder.networkInterceptors().add(chain -> {
             Request request = chain.request().newBuilder()
-                .addHeader("Authorization", "Basic " + graylogProperties.getCredentials())
+                .addHeader("Authorization", "Basic " + graylogApiProperties.getCredentials())
                 .addHeader("Accept", "application/json")
                 .build();
 
@@ -55,7 +55,7 @@ public class GraylogAutoConfiguration {
         @Qualifier("graylogOkHttpClient") OkHttpClient okHttpClient
     ) {
 
-        GraylogRequest request = new GraylogRequest(okHttpClient, graylogProperties);
+        GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
         SearchAbsolute absolute = new SearchAbsolute(request);
 
         return new GraylogSearch(absolute);

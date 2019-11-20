@@ -1,6 +1,6 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
-import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogAutoConfiguration;
+import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
 import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
 	classes = {
-		GraylogAutoConfiguration.class
+		GraylogSdkAutoConfiguration.class
 	},
 	properties = {
 		"spring.main.banner-mode=off"

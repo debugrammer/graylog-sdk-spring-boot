@@ -1,6 +1,6 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
-import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogProperties;
+import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,15 +19,15 @@ public class GraylogRequest {
 
     private final OkHttpClient okHttpClient;
 
-    private final GraylogProperties graylogProperties;
+    private final GraylogApiProperties graylogApiProperties;
 
     public GraylogRequest(
         OkHttpClient okHttpClient,
-        GraylogProperties graylogProperties
+        GraylogApiProperties graylogApiProperties
     ) {
 
         this.okHttpClient = okHttpClient;
-        this.graylogProperties = graylogProperties;
+        this.graylogApiProperties = graylogApiProperties;
     }
 
     public String httpGetRequest(HttpUrl httpUrl) throws IOException {
@@ -51,8 +51,8 @@ public class GraylogRequest {
 
     public HttpUrl.Builder getHttpUrlBuilder() {
         return new HttpUrl.Builder()
-            .scheme(graylogProperties.getScheme())
-            .host(graylogProperties.getHost())
-            .port(graylogProperties.getPort());
+            .scheme(graylogApiProperties.getScheme())
+            .host(graylogApiProperties.getHost())
+            .port(graylogApiProperties.getPort());
     }
 }

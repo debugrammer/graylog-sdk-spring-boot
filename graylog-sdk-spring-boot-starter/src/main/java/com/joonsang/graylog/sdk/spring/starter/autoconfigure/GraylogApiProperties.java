@@ -5,15 +5,15 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Graylog SDK Properties
+ * Graylog API Properties
  * @author debugrammer
  * @version 1.0
  * @since 2019-11-18
  */
 @Getter
 @Setter
-@ConfigurationProperties("graylog.api")
-public class GraylogProperties {
+@ConfigurationProperties("graylog.sdk.api")
+public class GraylogApiProperties {
 
     private String scheme;
 
