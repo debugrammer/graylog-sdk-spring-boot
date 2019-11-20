@@ -1,0 +1,13 @@
+plugins {
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id 'java'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation group: 'com.joonsang.graylog', name: 'graylog-query-builder', version: '1.0.2'
+
+	implementation project(':graylog-sdk-spring-boot-starter')
+}

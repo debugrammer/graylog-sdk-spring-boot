@@ -1,0 +1,4 @@
+rootProject.name = 'graylog-sdk-spring-boot-parent'
+
+include 'graylog-sdk-spring-boot-samples'
+include 'graylog-sdk-spring-boot-starter'

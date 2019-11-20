@@ -1,0 +1,30 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+repositories {
+	mavenCentral()
+}
+
+subprojects {
+	group = 'com.joonsang.graylog'
+	version = '1.0.0-beta.0'
+	sourceCompatibility = '11'
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+project ':graylog-sdk-spring-boot-samples'
+project ':graylog-sdk-spring-boot-starter'
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+}

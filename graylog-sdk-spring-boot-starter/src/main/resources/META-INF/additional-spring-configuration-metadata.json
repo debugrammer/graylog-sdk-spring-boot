@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "graylog.api.scheme",
+      "type": "java.lang.String",
+      "description": "Graylog API scheme."
+    },
+    {
+      "name": "graylog.api.host",
+      "type": "java.lang.String",
+      "description": "Graylog API host."
+    },
+    {
+      "name": "graylog.api.port",
+      "type": "java.lang.String",
+      "description": "Graylog API port."
+    },
+    {
+      "name": "graylog.api.credentials",
+      "type": "java.lang.String",
+      "description": "Graylog API credentials."
+    }
+  ]
+}

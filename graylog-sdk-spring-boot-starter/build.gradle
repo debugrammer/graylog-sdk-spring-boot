@@ -1,0 +1,34 @@
+plugins {
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id 'java'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-json'
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+	implementation group: 'com.squareup.okhttp3', name:'okhttp', version: '4.2.2'
+	implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
+
+	annotationProcessor("org.projectlombok:lombok:1.18.10")
+	testAnnotationProcessor("org.projectlombok:lombok:1.18.10")
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+}
