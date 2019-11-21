@@ -23,7 +23,7 @@ public class GraylogSearchController {
     }
 
     /**
-     * Message
+     * Message.
      * Get message by API request ID.
      */
     @GetMapping({"/messages/{requestId}"})
@@ -49,7 +49,7 @@ public class GraylogSearchController {
     }
 
     /**
-     * Statistics
+     * Statistics.
      * Generates two statistics by sources' process times are between 0ms and 500ms.
      * One has the stats from today to yesterday, the another has last 7 days stats.
      */
