@@ -14,5 +14,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("graylog.sdk")
 public class GraylogSdkProperties {
 
-    private String timezone;
+    private String timezone = "US/Eastern";
 }

@@ -19,7 +19,12 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0.0
  */
 @Configuration
-@EnableConfigurationProperties({ GraylogSdkProperties.class, GraylogApiProperties.class })
+@EnableConfigurationProperties(
+    {
+        GraylogSdkProperties.class,
+        GraylogApiProperties.class
+    }
+)
 public class GraylogSdkAutoConfiguration {
 
     private final GraylogSdkProperties graylogSdkProperties;

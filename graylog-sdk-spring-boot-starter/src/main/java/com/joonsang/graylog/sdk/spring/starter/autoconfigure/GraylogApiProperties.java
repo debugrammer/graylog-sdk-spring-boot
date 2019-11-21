@@ -14,11 +14,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("graylog.sdk.api")
 public class GraylogApiProperties {
 
-    private String scheme;
+    private String scheme = "http";
 
-    private String host;
+    private String host = "127.0.0.1";
 
-    private Integer port;
+    private Integer port = 9000;
 
-    private String credentials;
+    private String credentials = "";
 }
