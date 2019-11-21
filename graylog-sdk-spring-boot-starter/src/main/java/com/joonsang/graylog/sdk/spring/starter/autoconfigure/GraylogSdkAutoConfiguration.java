@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.util.concurrent.TimeUnit;
@@ -65,7 +66,7 @@ public class GraylogSdkAutoConfiguration {
         builder.networkInterceptors().add(chain -> {
             Request request = chain.request().newBuilder()
                 .addHeader("Authorization", "Basic " + graylogApiProperties.getCredentials())
-                .addHeader("Accept", "application/json")
+                .addHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .build();
 
             return chain.proceed(request);
