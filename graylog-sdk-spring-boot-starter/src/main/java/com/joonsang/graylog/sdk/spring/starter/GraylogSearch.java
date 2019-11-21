@@ -86,7 +86,7 @@ public class GraylogSearch {
         return searchAbsolute.getStatistics(field, query, from, to, filter);
     }
 
-    Histogram getHistogram(
+    public Histogram getHistogram(
         String streamId,
         String interval,
         LocalDateTime fromDateTime,
@@ -101,7 +101,7 @@ public class GraylogSearch {
         return searchAbsolute.getHistogram(query, interval, from, to, filter);
     }
 
-    FieldHistogram getFieldHistogram(
+    public FieldHistogram getFieldHistogram(
         String streamId,
         String field,
         String interval,
