@@ -1,5 +1,8 @@
 package com.joonsang.graylog.sdk.spring.starter.autoconfigure;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.search.SearchAbsolute;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +45,15 @@ public class GraylogSdkAutoConfiguration {
     }
 
     @Bean
+    public ObjectMapper graylogObjectMapper() {
+        return Jackson2ObjectMapperBuilder.json()
+            .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .modules(new JavaTimeModule())
+            .build();
+    }
+
+    @Bean
     public OkHttpClient graylogOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectionPool(new ConnectionPool(10, 10, TimeUnit.SECONDS))
@@ -63,12 +76,13 @@ public class GraylogSdkAutoConfiguration {
 
     @Bean
     public GraylogSearch graylogSearch(
+        @Qualifier("graylogObjectMapper") ObjectMapper objectMapper,
         @Qualifier("graylogOkHttpClient") OkHttpClient okHttpClient
     ) {
 
         GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
         SearchAbsolute absolute = new SearchAbsolute(request, graylogSdkProperties);
 
-        return new GraylogSearch(absolute);
+        return new GraylogSearch(objectMapper, absolute);
     }
 }

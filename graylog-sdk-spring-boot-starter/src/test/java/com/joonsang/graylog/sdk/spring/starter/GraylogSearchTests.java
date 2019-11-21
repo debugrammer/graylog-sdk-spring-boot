@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,6 +35,23 @@ class GraylogSearchTests {
 
 	@Autowired
 	GraylogSearch graylogSearch;
+
+	@Test
+	void messages() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+		@SuppressWarnings("unchecked")
+		List<TestMessage> messages = (List<TestMessage>) graylogSearch.getMessages(
+			GRAYLOG_STREAM_ID,
+			from,
+			to,
+			"message:API_REQUEST_FINISHED",
+			TestMessage.class
+		);
+
+		assertThat(messages).isNotNull();
+	}
 
 	@Test
 	void statistics() throws IOException {

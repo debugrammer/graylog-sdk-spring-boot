@@ -33,6 +33,31 @@ public class SearchAbsolute {
         this.graylogSdkProperties = graylogSdkProperties;
     }
 
+    public List<Map<String, Map<String, ?>>> getMessages(
+        String fields,
+        String query,
+        String from,
+        String to,
+        String filter
+    ) throws IOException {
+
+        HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()
+            .addPathSegments("api/search/universal/absolute")
+            .addQueryParameter("fields", fields)
+            .addQueryParameter("query", query)
+            .addQueryParameter("from", from)
+            .addQueryParameter("to", to)
+            .addQueryParameter("filter", filter)
+            .build();
+
+        String body = graylogRequest.httpGetRequest(httpUrl);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Map<String, ?>>> messages = JsonPath.parse(body).read("$.messages", List.class);
+
+        return messages;
+    }
+
     public Statistics getStatistics(
         String field,
         String query,
