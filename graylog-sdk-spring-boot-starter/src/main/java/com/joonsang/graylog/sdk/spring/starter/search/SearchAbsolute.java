@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Message search with absolute time range.
+ * Search with absolute time range.
  * @author debugrammer
  * @since 1.0.0
  */
@@ -123,7 +123,11 @@ public class SearchAbsolute {
 
         for (Map.Entry<Long, Integer> entry : sortedResult.entrySet()) {
             HistogramData histogramData = new HistogramData(
-                GraylogUtils.convertTimestampToStringDate(graylogSdkProperties.getTimezone(), entry.getKey(), interval),
+                GraylogUtils.convertTimestampToStringDate(
+                    graylogSdkProperties.getTimezone(),
+                    entry.getKey(),
+                    interval
+                ),
                 entry.getValue()
             );
 
@@ -249,20 +253,26 @@ public class SearchAbsolute {
         Map<String, Integer> sortedResult;
 
         if (reverseOrder) {
-            sortedResult = termsMap
-                .entrySet()
-                .stream()
+            sortedResult = termsMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(
-                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new)
+                    Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e2,
+                        LinkedHashMap::new
+                    )
                 );
         } else {
-            sortedResult = termsMap
-                .entrySet()
-                .stream()
+            sortedResult = termsMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(
-                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new)
+                    Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e2,
+                        LinkedHashMap::new
+                    )
                 );
         }
 

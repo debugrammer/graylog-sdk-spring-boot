@@ -50,7 +50,7 @@ class GraylogSearchTests {
 			TestMessage.class
 		);
 
-		assertThat(messages).isNotNull();
+		assertThat(messages).isNotEmpty();
 	}
 
 	@Test
