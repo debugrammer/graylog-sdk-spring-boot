@@ -10,6 +10,8 @@ import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0.0
  */
 @Configuration
+@ConditionalOnClass(GraylogSearch.class)
 @EnableConfigurationProperties(
     {
         GraylogSdkProperties.class,
@@ -46,6 +49,7 @@ public class GraylogSdkAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ObjectMapper graylogObjectMapper() {
         return Jackson2ObjectMapperBuilder.json()
             .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
@@ -55,6 +59,7 @@ public class GraylogSdkAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public OkHttpClient graylogOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
             .connectionPool(new ConnectionPool(10, 10, TimeUnit.SECONDS))
@@ -76,6 +81,7 @@ public class GraylogSdkAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public GraylogSearch graylogSearch(
         @Qualifier("graylogObjectMapper") ObjectMapper objectMapper,
         @Qualifier("graylogOkHttpClient") OkHttpClient okHttpClient
