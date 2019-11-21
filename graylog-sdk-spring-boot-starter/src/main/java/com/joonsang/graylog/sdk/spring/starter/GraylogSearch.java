@@ -1,5 +1,6 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
+import com.joonsang.graylog.sdk.spring.starter.domain.FieldHistogram;
 import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
 import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
 import com.joonsang.graylog.sdk.spring.starter.search.SearchAbsolute;
@@ -50,6 +51,22 @@ public class GraylogSearch {
         String to = toDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         return searchAbsolute.getHistogram(query, interval, from, to, filter);
+    }
+
+    FieldHistogram getFieldHistogram(
+        String streamId,
+        String field,
+        String interval,
+        LocalDateTime fromDateTime,
+        LocalDateTime toDateTime,
+        String query
+    ) throws IOException {
+
+        String filter = "streams:" + streamId;
+        String from = fromDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String to = toDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        return searchAbsolute.getFieldHistogram(field, query, interval, from, to, filter);
     }
 
     public Terms getTerms(

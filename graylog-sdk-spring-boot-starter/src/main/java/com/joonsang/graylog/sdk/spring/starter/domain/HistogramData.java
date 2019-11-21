@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@ToString
 public class HistogramData implements Serializable {
 
     private String label;

@@ -1,12 +1,13 @@
 package com.joonsang.graylog.sdk.spring.starter.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * Histogram Domain
+ * Field Histogram Domain
  * @author debugrammer
  * @since 1.0.0
  */
@@ -15,7 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
-public class Histogram implements Serializable {
+public class FieldHistogram implements Serializable {
 
-    private List<HistogramData> histogram;
+    @JsonProperty("field_histogram")
+    private List<FieldHistogramData> fieldHistogram;
 }

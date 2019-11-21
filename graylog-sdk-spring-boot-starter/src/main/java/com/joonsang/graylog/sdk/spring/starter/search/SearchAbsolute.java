@@ -9,11 +9,12 @@ import okhttp3.HttpUrl;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Search Absolute
+ * Message search with absolute time range.
  * @author debugrammer
  * @since 1.0.0
  */
@@ -105,6 +106,77 @@ public class SearchAbsolute {
         }
 
         return new Histogram(results);
+    }
+
+    public FieldHistogram getFieldHistogram(
+        String field,
+        String query,
+        String interval,
+        String from,
+        String to,
+        String filter
+    ) throws IOException {
+
+        HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()
+            .addPathSegments("api/search/universal/absolute/fieldhistogram")
+            .addQueryParameter("field", field)
+            .addQueryParameter("query", query)
+            .addQueryParameter("interval", interval)
+            .addQueryParameter("from", from)
+            .addQueryParameter("to", to)
+            .addQueryParameter("filter", filter)
+            .build();
+
+        String body = graylogRequest.httpGetRequest(httpUrl);
+
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, ?>> resultMap = JsonPath.parse(body).read("$.results", Map.class);
+
+        Map<Long, Map<String, ?>> sortedResult = new TreeMap<>();
+
+        for (Map.Entry<String, Map<String, ?>> entry : resultMap.entrySet()) {
+            sortedResult.put(Long.valueOf(entry.getKey()), entry.getValue());
+        }
+
+        List<FieldHistogramData> results = new ArrayList<>();
+
+        for (Map.Entry<Long, Map<String, ?>> entry : sortedResult.entrySet()) {
+            FieldHistogramData fieldHistogramData = new FieldHistogramData();
+            fieldHistogramData.setLabel(
+                GraylogUtils.convertTimestampToStringDate(
+                    graylogSdkProperties.getTimezone(),
+                    entry.getKey(),
+                    interval
+                )
+            );
+            fieldHistogramData.setTotalCount((Integer) entry.getValue().get("total_count"));
+            fieldHistogramData.setCount((Integer) entry.getValue().get("count"));
+            fieldHistogramData.setMin(
+                entry.getValue().get("min") instanceof BigDecimal
+                    ? ((BigDecimal) entry.getValue().get("min")).doubleValue()
+                    : (Double) entry.getValue().get("min")
+            );
+            fieldHistogramData.setMax(
+                entry.getValue().get("max") instanceof BigDecimal
+                    ? ((BigDecimal) entry.getValue().get("max")).doubleValue()
+                    : (Double) entry.getValue().get("max")
+            );
+            fieldHistogramData.setTotal(
+                entry.getValue().get("total") instanceof BigDecimal
+                    ? ((BigDecimal) entry.getValue().get("total")).doubleValue()
+                    : (Double) entry.getValue().get("total")
+            );
+            fieldHistogramData.setMean(
+                entry.getValue().get("mean") instanceof BigDecimal
+                    ? ((BigDecimal) entry.getValue().get("mean")).doubleValue()
+                    : (Double) entry.getValue().get("mean")
+            );
+            fieldHistogramData.setCardinality((Integer) entry.getValue().get("cardinality"));
+
+            results.add(fieldHistogramData);
+        }
+
+        return new FieldHistogram(results);
     }
 
     public Terms getTerms(
