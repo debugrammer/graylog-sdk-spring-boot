@@ -38,6 +38,16 @@ public class GraylogSearch {
         this.searchAbsolute = searchAbsolute;
     }
 
+    /**
+     * Message list.
+     * @param streamId Graylog Stream ID
+     * @param fromDateTime time range start
+     * @param toDateTime time range end
+     * @param query Graylog search query
+     * @param messageObject message object
+     * @return List of message
+     * @since 1.0.0
+     */
     public List<?> getMessages(
         String streamId,
         LocalDateTime fromDateTime,
@@ -71,6 +81,16 @@ public class GraylogSearch {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Statistics.
+     * @param streamId Graylog Stream ID
+     * @param field field name
+     * @param fromDateTime time range start
+     * @param toDateTime time range end
+     * @param query Graylog search query
+     * @return Statistics
+     * @since 1.0.0
+     */
     public Statistics getStatistics(
         String streamId,
         String field,
@@ -86,6 +106,16 @@ public class GraylogSearch {
         return searchAbsolute.getStatistics(field, query, from, to, filter);
     }
 
+    /**
+     * Histogram.
+     * @param streamId Graylog Stream ID
+     * @param interval histogram interval
+     * @param fromDateTime time range start
+     * @param toDateTime time range end
+     * @param query Graylog search query
+     * @return Histogram
+     * @since 1.0.0
+     */
     public Histogram getHistogram(
         String streamId,
         String interval,
@@ -101,6 +131,17 @@ public class GraylogSearch {
         return searchAbsolute.getHistogram(query, interval, from, to, filter);
     }
 
+    /**
+     * Field Histogram.
+     * @param streamId Graylog Stream ID
+     * @param field field name
+     * @param interval histogram interval
+     * @param fromDateTime time range start
+     * @param toDateTime time range end
+     * @param query Graylog search query
+     * @return Field Histogram
+     * @since 1.0.0
+     */
     public FieldHistogram getFieldHistogram(
         String streamId,
         String field,
@@ -117,6 +158,20 @@ public class GraylogSearch {
         return searchAbsolute.getFieldHistogram(field, query, interval, from, to, filter);
     }
 
+    /**
+     * Terms.
+     * @param streamId Graylog Stream ID
+     * @param field field name
+     * @param stackedFields field names to stack
+     * @param size maximum number of terms to return
+     * @param fromDateTime time range start
+     * @param toDateTime time range end
+     * @param reverseOrder true for ascending order
+     * @param topValuesOnly remove other data from result
+     * @param query Graylog search query
+     * @return Terms
+     * @since 1.0.0
+     */
     public Terms getTerms(
         String streamId,
         String field,

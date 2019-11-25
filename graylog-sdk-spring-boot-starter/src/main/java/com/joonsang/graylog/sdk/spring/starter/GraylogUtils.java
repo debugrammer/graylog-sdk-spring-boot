@@ -15,6 +15,13 @@ import java.util.TimeZone;
  */
 public class GraylogUtils {
 
+    /**
+     * Get Double value from JSON path.
+     * @param body JSON body
+     * @param path JSON path to get
+     * @return Converted Double value
+     * @since 1.0.0
+     */
     public static Double getDoubleFromJsonPath(String body, String path) {
         try {
             return JsonPath.parse(body).read(path, Double.class);
@@ -23,6 +30,14 @@ public class GraylogUtils {
         }
     }
 
+    /**
+     * Convert timestamp to formatted String date.
+     * @param timezone timezone
+     * @param timestamp timestamp to convert
+     * @param timeUnit time unit to format
+     * @return Converted String date
+     * @since 1.0.0
+     */
     public static String convertTimestampToStringDate(String timezone, long timestamp, String timeUnit) {
         LocalDateTime dateTime = LocalDateTime.ofInstant(
             Instant.ofEpochSecond(timestamp),

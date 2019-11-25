@@ -29,6 +29,12 @@ public class GraylogRequest {
         this.graylogApiProperties = graylogApiProperties;
     }
 
+    /**
+     * HTTP GET request.
+     * @param httpUrl OkHttp HttpUrl object
+     * @return Response from Graylog
+     * @since 1.0.0
+     */
     public String httpGetRequest(HttpUrl httpUrl) throws IOException {
         Request request = new Request.Builder()
             .url(httpUrl)
@@ -48,6 +54,11 @@ public class GraylogRequest {
         return Objects.requireNonNull(response.body()).string();
     }
 
+    /**
+     * Get prebuilt OkHttp HttpUrl.Builder object.
+     * @return Prebuilt OkHttp HttpUrl.Builder object
+     * @since 1.0.0
+     */
     public HttpUrl.Builder getHttpUrlBuilder() {
         return new HttpUrl.Builder()
             .scheme(graylogApiProperties.getScheme())

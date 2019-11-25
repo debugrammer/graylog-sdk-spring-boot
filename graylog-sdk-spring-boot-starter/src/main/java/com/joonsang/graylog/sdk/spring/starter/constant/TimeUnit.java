@@ -4,6 +4,11 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
+/**
+ * Graylog Time Unit Constants
+ * @author debugrammer
+ * @since 1.0.0
+ */
 public class TimeUnit {
 
     public static final String YEAR = "year";
