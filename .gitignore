@@ -32,7 +32,7 @@ out/
 .vscode/
 
 ### Secret key files ###
-/secret/
+secret/
 
 ### Gradle secret properties ###
 gradle.properties

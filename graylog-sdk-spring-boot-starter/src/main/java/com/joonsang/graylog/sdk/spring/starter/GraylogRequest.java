@@ -33,6 +33,7 @@ public class GraylogRequest {
      * HTTP GET request.
      * @param httpUrl OkHttp HttpUrl object
      * @return Response from Graylog
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public String httpGetRequest(HttpUrl httpUrl) throws IOException {

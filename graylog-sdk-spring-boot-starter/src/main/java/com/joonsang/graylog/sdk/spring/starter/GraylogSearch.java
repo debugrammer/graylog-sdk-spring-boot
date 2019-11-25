@@ -46,6 +46,11 @@ public class GraylogSearch {
      * @param query Graylog search query
      * @param messageObject message object
      * @return List of message
+     * @throws IOException Graylog server failure
+     * @throws NoSuchMethodException if given message object does not have constructor
+     * @throws IllegalAccessException if given message object fails initialization
+     * @throws InvocationTargetException if given message object fails initialization
+     * @throws InstantiationException if given message object fails initialization
      * @since 1.0.0
      */
     public List<?> getMessages(
@@ -89,6 +94,7 @@ public class GraylogSearch {
      * @param toDateTime time range end
      * @param query Graylog search query
      * @return Statistics
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public Statistics getStatistics(
@@ -114,6 +120,7 @@ public class GraylogSearch {
      * @param toDateTime time range end
      * @param query Graylog search query
      * @return Histogram
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public Histogram getHistogram(
@@ -140,6 +147,7 @@ public class GraylogSearch {
      * @param toDateTime time range end
      * @param query Graylog search query
      * @return Field Histogram
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public FieldHistogram getFieldHistogram(
@@ -170,6 +178,7 @@ public class GraylogSearch {
      * @param topValuesOnly remove other data from result
      * @param query Graylog search query
      * @return Terms
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public Terms getTerms(

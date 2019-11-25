@@ -41,6 +41,7 @@ public class SearchAbsolute {
      * @param to time range end
      * @param filter filter
      * @return Message list from Graylog
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public List<Map<String, Map<String, ?>>> getMessages(
@@ -76,6 +77,7 @@ public class SearchAbsolute {
      * @param to time range end
      * @param filter filter
      * @return Statistics from Graylog
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public Statistics getStatistics(
@@ -119,6 +121,7 @@ public class SearchAbsolute {
      * @param to time range end
      * @param filter filter
      * @return Histogram from Graylog
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public Histogram getHistogram(
@@ -176,6 +179,7 @@ public class SearchAbsolute {
      * @param to time range end
      * @param filter filter
      * @return Field histogram from Graylog
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public FieldHistogram getFieldHistogram(
@@ -261,6 +265,7 @@ public class SearchAbsolute {
      * @param reverseOrder true for ascending order
      * @param topValuesOnly remove other data from result
      * @return Terms from Graylog
+     * @throws IOException Graylog server failure
      * @since 1.0.0
      */
     public Terms getTerms(

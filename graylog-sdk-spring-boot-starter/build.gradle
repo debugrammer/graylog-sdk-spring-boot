@@ -2,6 +2,82 @@ plugins {
 	id 'org.springframework.boot'
 	id 'io.spring.dependency-management'
 	id 'java'
+	id 'maven-publish'
+	id 'signing'
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allJava
+	archiveClassifier.set("sources")
+}
+
+task javadocJar(type: Jar) {
+	from javadoc
+	archiveClassifier.set("javadoc")
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = 'graylog-sdk-spring-boot-starter'
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+			versionMapping {
+				usage('java-api') {
+					fromResolutionOf('runtimeClasspath')
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
+			pom {
+				name = 'Graylog SDK Spring Boot Starter'
+				description = 'Graylog REST API SDK Spring Boot Starter'
+				url = 'https://github.com/debugrammer/graylog-sdk-spring-boot'
+				licenses {
+					license {
+						name = 'The MIT License'
+						url = 'https://opensource.org/licenses/MIT'
+					}
+				}
+				developers {
+					developer {
+						id = 'debugrammer'
+						name = 'Joonsang Park'
+						email = 'debugrammer@gmail.com'
+					}
+				}
+				scm {
+					connection = 'scm:git:git://github.com/debugrammer/graylog-sdk-spring-boot.git'
+					developerConnection = 'scm:git:ssh:git@github.com:debugrammer/graylog-sdk-spring-boot.git'
+					url = 'https://github.com/debugrammer/graylog-sdk-spring-boot'
+				}
+			}
+		}
+	}
+	repositories {
+		maven {
+			url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+
+			if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+				credentials {
+					username sonatypeUsername
+					password sonatypePassword
+				}
+			}
+		}
+	}
+}
+
+signing {
+	sign publishing.publications.mavenJava
+}
+
+javadoc {
+	if(JavaVersion.current().isJava9Compatible()) {
+		options.addBooleanOption('html5', true)
+	}
 }
 
 dependencies {
