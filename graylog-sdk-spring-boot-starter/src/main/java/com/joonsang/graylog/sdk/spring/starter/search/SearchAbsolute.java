@@ -33,6 +33,16 @@ public class SearchAbsolute {
         this.graylogSdkProperties = graylogSdkProperties;
     }
 
+    /**
+     * Message list search.
+     * @param fields comma separated list of fields to return
+     * @param query Graylog search query
+     * @param from time range start
+     * @param to time range end
+     * @param filter filter
+     * @return Message list from Graylog
+     * @since 1.0.0
+     */
     public List<Map<String, Map<String, ?>>> getMessages(
         String fields,
         String query,
@@ -58,6 +68,16 @@ public class SearchAbsolute {
         return messages;
     }
 
+    /**
+     * Statistics.
+     * @param field message field of numeric type to return statistics for
+     * @param query Graylog search query
+     * @param from time range start
+     * @param to time range end
+     * @param filter filter
+     * @return Statistics from Graylog
+     * @since 1.0.0
+     */
     public Statistics getStatistics(
         String field,
         String query,
@@ -91,6 +111,16 @@ public class SearchAbsolute {
         return statistics;
     }
 
+    /**
+     * Histogram.
+     * @param query Graylog search query
+     * @param interval histogram interval
+     * @param from time range start
+     * @param to time range end
+     * @param filter filter
+     * @return Histogram from Graylog
+     * @since 1.0.0
+     */
     public Histogram getHistogram(
         String query,
         String interval,
@@ -137,6 +167,17 @@ public class SearchAbsolute {
         return new Histogram(results);
     }
 
+    /**
+     * Field Histogram.
+     * @param field field of whose values to get the histogram of
+     * @param query Graylog search query
+     * @param interval histogram interval
+     * @param from time range start
+     * @param to time range end
+     * @param filter filter
+     * @return Field histogram from Graylog
+     * @since 1.0.0
+     */
     public FieldHistogram getFieldHistogram(
         String field,
         String query,
@@ -208,6 +249,20 @@ public class SearchAbsolute {
         return new FieldHistogram(results);
     }
 
+    /**
+     * Terms.
+     * @param field message field of to return terms of
+     * @param stackedFields fields to stack
+     * @param query Graylog search query
+     * @param from time range start
+     * @param to time range end
+     * @param filter filter
+     * @param size maximum number of terms to return
+     * @param reverseOrder true for ascending order
+     * @param topValuesOnly remove other data from result
+     * @return Terms from Graylog
+     * @since 1.0.0
+     */
     public Terms getTerms(
         String field,
         String stackedFields,
