@@ -75,7 +75,7 @@ List<YourMessageObject> messages = (List<YourMessageObject>) graylogSearch.getMe
     "your-graylog-stream-id",
     from,
     to,
-    "message:API_REQUEST_FINISHED",
+    "your graylog search query",
     YourMessageObject.class
 );
 ```
@@ -88,10 +88,10 @@ LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.
 
 Statistics statistics = graylogSearch.getStatistics(
     "your-graylog-stream-id",
-    "process_time",
+    "field_name",
     from,
     to,
-    "message:API_REQUEST_FINISHED"
+    "your graylog search query"
 );
 ```
 
@@ -106,7 +106,7 @@ Histogram histogram = graylogSearch.getHistogram(
     TimeUnit.HOUR,
     from,
     to,
-    "message:API_REQUEST_FINISHED"
+    "your graylog search query"
 );
 ```
 
@@ -118,11 +118,11 @@ LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.
 
 FieldHistogram fieldHistogram = graylogSearch.getFieldHistogram(
     "your-graylog-stream-id",
-    "process_time",
+    "field_name",
     TimeUnit.HOUR,
     from,
     to,
-    "message:API_REQUEST_FINISHED"
+    "your graylog search query"
 );
 ```
 
@@ -134,13 +134,16 @@ LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.
 
 Terms terms = graylogSearch.getTerms(
     "your-graylog-stream-id",
-    "process_time",
-    "",
+    "field_name",
+    "field_name_to_stack",
     5,
     from,
     to,
     false,
     false,
-    "message:API_REQUEST_FINISHED"
+    "your graylog search query"
 );
 ```
+
+## Code Examples
+* [graylog-sdk-spring-boot-samples](https://github.com/debugrammer/graylog-sdk-spring-boot/tree/master/graylog-sdk-spring-boot-samples) in this repository contains the project that show you sample API implementations using Graylog SDK with Spring Boot.
