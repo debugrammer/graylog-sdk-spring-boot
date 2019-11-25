@@ -22,7 +22,7 @@ implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-sta
 ```
 
 ## Usage
-Configure environment variables for Graylog SDK with `application.properties` or `application.yaml`.
+Configure environment variables for Graylog SDK with `application.properties` or `application.yaml`:
 ```
 # Graylog SDK Settings
 graylog.sdk.timezone={your_graylog_server_timezone}
