@@ -2,6 +2,7 @@ package com.joonsang.graylog.sdk.spring.samples.controller;
 
 import com.joonsang.graylog.GraylogQuery;
 import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
+import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
 import com.joonsang.graylog.sdk.spring.samples.service.GraylogSearchService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping({"/v1/search"})
@@ -68,5 +70,30 @@ public class GraylogSearchController {
         );
 
         return new ResponseEntity<>(twoStats, HttpStatus.OK);
+    }
+
+    /**
+     * Histogram.
+     * Generates multiple datetime histograms with labels by process time
+     */
+    @GetMapping({"/histograms/process-times"})
+    public ResponseEntity<?> getProcessTimeHistogram(
+        @RequestParam(value = "interval") String interval,
+        @RequestParam(value = "from") String from,
+        @RequestParam(value = "to") String to
+    ) throws IOException {
+
+        LocalDateTime fromDateTime = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime toDateTime = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        Histograms histograms = graylogSearchService.getProcessTimeHistograms(
+            interval,
+            fromDateTime,
+            toDateTime,
+            GraylogQuery.builder()
+                .field("message", "API_REQUEST_FINISHED")
+        );
+
+        return new ResponseEntity<>(histograms, HttpStatus.OK);
     }
 }
