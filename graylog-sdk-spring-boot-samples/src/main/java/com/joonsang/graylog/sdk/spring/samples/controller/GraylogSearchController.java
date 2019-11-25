@@ -1,6 +1,7 @@
 package com.joonsang.graylog.sdk.spring.samples.controller;
 
 import com.joonsang.graylog.GraylogQuery;
+import com.joonsang.graylog.sdk.spring.samples.domain.FieldHistograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
@@ -77,7 +78,7 @@ public class GraylogSearchController {
      * Generates multiple datetime histograms with labels by process time
      */
     @GetMapping({"/histograms/process-times"})
-    public ResponseEntity<?> getProcessTimeHistogram(
+    public ResponseEntity<?> getProcessTimeHistograms(
         @RequestParam(value = "interval") String interval,
         @RequestParam(value = "from") String from,
         @RequestParam(value = "to") String to
@@ -95,5 +96,32 @@ public class GraylogSearchController {
         );
 
         return new ResponseEntity<>(histograms, HttpStatus.OK);
+    }
+
+    /**
+     * Field Histogram.
+     * Generates multiple field value histograms with labels by top requested sources' process times
+     */
+    @GetMapping({"/field-histograms/process-times/sources"})
+    public ResponseEntity<?> getSourceProcessTimeFieldHistograms(
+        @RequestParam(value = "size") int size,
+        @RequestParam(value = "interval") String interval,
+        @RequestParam(value = "from") String from,
+        @RequestParam(value = "to") String to
+    ) throws IOException {
+
+        LocalDateTime fromDateTime = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime toDateTime = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        FieldHistograms fieldHistograms = graylogSearchService.getProcessTimeFieldHistogramsByTopSources(
+            size,
+            interval,
+            fromDateTime,
+            toDateTime,
+            GraylogQuery.builder()
+                .field("message", "API_REQUEST_FINISHED")
+        );
+
+        return new ResponseEntity<>(fieldHistograms, HttpStatus.OK);
     }
 }

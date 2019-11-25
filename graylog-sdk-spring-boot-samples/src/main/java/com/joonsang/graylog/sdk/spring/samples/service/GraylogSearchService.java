@@ -1,11 +1,15 @@
 package com.joonsang.graylog.sdk.spring.samples.service;
 
 import com.joonsang.graylog.GraylogQuery;
+import com.joonsang.graylog.sdk.spring.samples.domain.FieldHistograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
 import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
+import com.joonsang.graylog.sdk.spring.starter.domain.FieldHistogram;
 import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
+import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
+import com.joonsang.graylog.sdk.spring.starter.domain.TermsData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -124,6 +129,53 @@ public class GraylogSearchService {
         return Histograms.builder()
             .labels(List.of("All", "0-500", "500-"))
             .histograms(List.of(all, first, second))
+            .build();
+    }
+
+    public FieldHistograms getProcessTimeFieldHistogramsByTopSources(
+        int size,
+        String interval,
+        LocalDateTime fromDateTime,
+        LocalDateTime toDateTime,
+        GraylogQuery query
+    ) throws IOException {
+
+        Terms sourceRanking = graylogSearch.getTerms(
+            GRAYLOG_STREAM_ID,
+            "source",
+            "",
+            size,
+            fromDateTime,
+            toDateTime,
+            false,
+            true,
+            query.build()
+        );
+
+        List<String> labels = new ArrayList<>();
+        List<FieldHistogram> fieldHistograms = new ArrayList<>();
+
+        for (TermsData termsData : sourceRanking.getTerms()) {
+            String requestAction = termsData.getLabels().get(0);
+
+            labels.add(requestAction);
+            fieldHistograms.add(
+                graylogSearch.getFieldHistogram(
+                    GRAYLOG_STREAM_ID,
+                    "process_time",
+                    interval,
+                    fromDateTime,
+                    toDateTime,
+                    GraylogQuery.builder(query)
+                        .and().field("source", requestAction)
+                        .build()
+                )
+            );
+        }
+
+        return FieldHistograms.builder()
+            .labels(labels)
+            .fieldHistograms(fieldHistograms)
             .build();
     }
 }
