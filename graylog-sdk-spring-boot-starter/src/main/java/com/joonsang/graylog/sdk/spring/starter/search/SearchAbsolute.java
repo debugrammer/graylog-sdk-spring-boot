@@ -244,37 +244,26 @@ public class SearchAbsolute {
         int other = JsonPath.parse(body).read("$.other", Integer.class);
         int total = JsonPath.parse(body).read("$.total", Integer.class);
 
-        total = total - missing;
+        total -= missing;
 
         if (topValuesOnly) {
-            total = total - other;
+            total -= other;
         }
 
-        Map<String, Integer> sortedResult;
-
-        if (reverseOrder) {
-            sortedResult = termsMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(
-                    Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e2,
-                        LinkedHashMap::new
-                    )
-                );
-        } else {
-            sortedResult = termsMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(
-                    Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e2,
-                        LinkedHashMap::new
-                    )
-                );
-        }
+        Map<String, Integer> sortedResult = termsMap.entrySet().stream()
+            .sorted(
+                reverseOrder
+                    ? Map.Entry.comparingByValue()
+                    : Map.Entry.comparingByValue(Comparator.reverseOrder())
+            )
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    Map.Entry::getValue,
+                    (e1, e2) -> e2,
+                    LinkedHashMap::new
+                )
+            );
 
         List<TermsData> results = new ArrayList<>();
 
