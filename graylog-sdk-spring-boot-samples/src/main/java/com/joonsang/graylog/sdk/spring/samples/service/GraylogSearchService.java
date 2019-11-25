@@ -178,4 +178,28 @@ public class GraylogSearchService {
             .fieldHistograms(fieldHistograms)
             .build();
     }
+
+    public Terms getUsageRanking(
+        String field,
+        String stackedFields,
+        int size,
+        LocalDateTime fromDateTime,
+        LocalDateTime toDateTime,
+        boolean reverseOrder,
+        boolean topValuesOnly,
+        GraylogQuery query
+    ) throws IOException {
+
+        return graylogSearch.getTerms(
+            GRAYLOG_STREAM_ID,
+            field,
+            stackedFields,
+            size,
+            fromDateTime,
+            toDateTime,
+            reverseOrder,
+            topValuesOnly,
+            query.build()
+        );
+    }
 }

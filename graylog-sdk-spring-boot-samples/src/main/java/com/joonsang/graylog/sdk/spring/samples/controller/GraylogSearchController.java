@@ -6,6 +6,7 @@ import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
 import com.joonsang.graylog.sdk.spring.samples.service.GraylogSearchService;
+import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -123,5 +124,36 @@ public class GraylogSearchController {
         );
 
         return new ResponseEntity<>(fieldHistograms, HttpStatus.OK);
+    }
+
+    /**
+     * Terms.
+     * Get request path usage ranking
+     */
+    @GetMapping({"/terms/request-paths"})
+    public ResponseEntity<?> getRequestPathRanking(
+        @RequestParam(value = "size") int size,
+        @RequestParam(value = "from") String from,
+        @RequestParam(value = "to") String to,
+        @RequestParam(value = "top_values_only", defaultValue = "false") boolean topValuesOnly,
+        @RequestParam(value = "order", defaultValue = "desc") String order
+    ) throws IOException {
+
+        LocalDateTime fromDateTime = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime toDateTime = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        Terms terms = graylogSearchService.getUsageRanking(
+            "request_path",
+            "",
+            size,
+            fromDateTime,
+            toDateTime,
+            order.equals("asc"),
+            topValuesOnly,
+            GraylogQuery.builder()
+                .field("message", "API_REQUEST_FINISHED")
+        );
+
+        return new ResponseEntity<>(terms, HttpStatus.OK);
     }
 }
