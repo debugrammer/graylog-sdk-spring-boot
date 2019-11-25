@@ -147,3 +147,4 @@ Terms terms = graylogSearch.getTerms(
 
 ## Code Examples
 * [graylog-sdk-spring-boot-samples](https://github.com/debugrammer/graylog-sdk-spring-boot/tree/master/graylog-sdk-spring-boot-samples) in this repository contains the project that show you sample API implementations using Graylog SDK with Spring Boot.
+    * Check out [Graylog Query Builder](https://github.com/debugrammer/graylog-query-builder) if you are looking for query builder for Graylog search query.
