@@ -52,7 +52,7 @@ Currently, only Search APIs are supported.
 #### 1.1. Messages
 Message search with absolute time range.
 
-Create JavaBean class specifying your Graylog message fields.
+Create POJO class specifying your Graylog message fields.
 ```
 public class YourMessageObject {
 
