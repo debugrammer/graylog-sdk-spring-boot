@@ -1,0 +1,15 @@
+language: java
+
+sudo: false
+
+jdk:
+  - oraclejdk11
+  - openjdk11
+
+install: skip
+
+script: ./gradlew build -x test
+
+cache:
+  directories:
+    - $HOME/.gradle
