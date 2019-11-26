@@ -1,6 +1,7 @@
 # Graylog SDK Spring Boot Starter
 > Graylog SDK Spring Boot Starter to communicate with the [Graylog REST API](https://docs.graylog.org/en/latest/pages/configuration/rest_api.html)
 
+[![Build Status](https://travis-ci.org/debugrammer/graylog-sdk-spring-boot-starter.svg?branch=master)](https://travis-ci.org/debugrammer/graylog-sdk-spring-boot-starter)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.joonsang.graylog/graylog-sdk-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.joonsang.graylog/graylog-sdk-spring-boot-starter)
 [![Javadoc](https://javadoc-badge.appspot.com/com.joonsang.graylog/graylog-sdk-spring-boot-starter.svg?label=javadoc)](https://javadoc-badge.appspot.com/com.joonsang.graylog/graylog-sdk-spring-boot-starter)
 
