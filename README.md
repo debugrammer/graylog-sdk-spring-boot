@@ -84,10 +84,10 @@ LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.
 
 @SuppressWarnings("unchecked")
 List<YourMessageObject> messages = (List<YourMessageObject>) graylogSearch.getMessages(
-    "your-graylog-stream-id",
+    "graylog_stream_id",
     from,
     to,
-    "your graylog search query",
+    "request_id:AQZ4mfVGVqWKD38XZU7aVG",
     YourMessageObject.class
 );
 ```
@@ -99,11 +99,11 @@ LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatte
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 Statistics statistics = graylogSearch.getStatistics(
-    "your-graylog-stream-id",
+    "graylog_stream_id",
     "field_name",
     from,
     to,
-    "your graylog search query"
+    "process_time:[0 TO 500]"
 );
 ```
 
@@ -114,11 +114,11 @@ LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatte
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 Histogram histogram = graylogSearch.getHistogram(
-    "your-graylog-stream-id",
+    "graylog_stream_id",
     TimeUnit.HOUR,
     from,
     to,
-    "your graylog search query"
+    "process_time:[0 TO 500]"
 );
 ```
 
@@ -129,12 +129,12 @@ LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatte
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 FieldHistogram fieldHistogram = graylogSearch.getFieldHistogram(
-    "your-graylog-stream-id",
+    "graylog_stream_id",
     "field_name",
     TimeUnit.HOUR,
     from,
     to,
-    "your graylog search query"
+    "source:example.org"
 );
 ```
 
@@ -145,7 +145,7 @@ LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatte
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 Terms terms = graylogSearch.getTerms(
-    "your-graylog-stream-id",
+    "graylog_stream_id",
     "field_name",
     "field_name_to_stack",
     5,
@@ -153,7 +153,7 @@ Terms terms = graylogSearch.getTerms(
     to,
     false,
     false,
-    "your graylog search query"
+    "source:example.org"
 );
 ```
 

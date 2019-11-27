@@ -156,9 +156,9 @@ public class GraylogSearchService {
         List<FieldHistogram> fieldHistograms = new ArrayList<>();
 
         for (TermsData termsData : sourceRanking.getTerms()) {
-            String requestAction = termsData.getLabels().get(0);
+            String source = termsData.getLabels().get(0);
 
-            labels.add(requestAction);
+            labels.add(source);
             fieldHistograms.add(
                 graylogSearch.getFieldHistogram(
                     GRAYLOG_STREAM_ID,
@@ -167,7 +167,7 @@ public class GraylogSearchService {
                     fromDateTime,
                     toDateTime,
                     GraylogQuery.builder(query)
-                        .and().field("source", requestAction)
+                        .and().field("source", source)
                         .build()
                 )
             );
