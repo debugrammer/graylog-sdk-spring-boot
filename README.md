@@ -23,16 +23,27 @@ implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-sta
 ```
 
 ## Usage
-Configure environment variables for Graylog SDK with `application.properties` or `application.yaml`:
+Configure environment variables for Graylog SDK with `application.properties`:
 ```
-# Graylog SDK Settings
-graylog.sdk.timezone={your_graylog_server_timezone}
-
 # Graylog API Settings
-graylog.sdk.api.scheme={your_graylog_api_scheme}
-graylog.sdk.api.host={your_graylog_api_host}
-graylog.sdk.api.port={your_graylog_api_port}
-graylog.sdk.api.credentials={your_graylog_api_credentials}
+graylog.sdk.api.scheme=http
+graylog.sdk.api.host=localhost
+graylog.sdk.api.port=9000
+graylog.sdk.api.credentials=base64({graylog_access_token}:token)
+graylog.sdk.timezone=US/Eastern
+```
+
+or `application.yaml`:
+```
+# Graylog API Settings
+graylog:
+  sdk:
+    api:
+      scheme: http
+      host: localhost
+      port: 9000
+      credentials: base64({graylog_access_token}:token)
+    timezone: US/Eastern
 ```
 
 Then inject `GraylogSearch` bean in your project:
