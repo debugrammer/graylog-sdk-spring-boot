@@ -53,12 +53,24 @@ public class GraylogRequest {
     }
 
     /**
+     * Get prebuilt OkHttp HttpUrl.Builder object.
+     * @return Prebuilt OkHttp HttpUrl.Builder object
+     * @since 1.0.0
+     */
+    public HttpUrl.Builder getHttpUrlBuilder() {
+        return new HttpUrl.Builder()
+            .scheme(graylogApiProperties.getScheme())
+            .host(graylogApiProperties.getHost())
+            .port(graylogApiProperties.getPort());
+    }
+
+    /**
      * Validate Graylog server response.
      * @param response OkHttp Response object
      * @throws IOException Graylog server failure
      * @since 1.1.0
      */
-    public void validateResponse(Response response) throws IOException {
+    private void validateResponse(Response response) throws IOException {
         if (!response.isSuccessful()) {
             String message;
 
@@ -89,17 +101,5 @@ public class GraylogRequest {
         if (Objects.isNull(response.body())) {
             throw new GraylogServerException("Graylog server responded empty HTTP response body.");
         }
-    }
-
-    /**
-     * Get prebuilt OkHttp HttpUrl.Builder object.
-     * @return Prebuilt OkHttp HttpUrl.Builder object
-     * @since 1.0.0
-     */
-    public HttpUrl.Builder getHttpUrlBuilder() {
-        return new HttpUrl.Builder()
-            .scheme(graylogApiProperties.getScheme())
-            .host(graylogApiProperties.getHost())
-            .port(graylogApiProperties.getPort());
     }
 }
