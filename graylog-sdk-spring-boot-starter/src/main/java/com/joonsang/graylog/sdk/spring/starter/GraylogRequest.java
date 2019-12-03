@@ -1,10 +1,13 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
+import com.joonsang.graylog.sdk.spring.starter.exception.GraylogServerException;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -44,15 +47,48 @@ public class GraylogRequest {
 
         Response response = okHttpClient.newCall(request).execute();
 
-        if (!response.isSuccessful()) {
-            throw new IOException("Graylog server communication error.");
-        }
-
-        if (response.body() == null) {
-            throw new IOException("Graylog server responded empty HTTP response body.");
-        }
+        validateResponse(response);
 
         return Objects.requireNonNull(response.body()).string();
+    }
+
+    /**
+     * Validate Graylog server response.
+     * @param response OkHttp Response object
+     * @throws IOException Graylog server failure
+     * @since 1.1.0
+     */
+    public void validateResponse(Response response) throws IOException {
+        if (!response.isSuccessful()) {
+            String message;
+
+            String errorBody = Objects.isNull(response.body())
+                ? StringUtils.EMPTY
+                : Objects.requireNonNull(response.body()).string();
+
+            HttpStatus httpStatus = HttpStatus.valueOf(response.code());
+
+            switch (httpStatus) {
+                case UNAUTHORIZED:
+                    message = "Invalid Graylog server credentials.";
+                    break;
+                case BAD_REQUEST:
+                    message = StringUtils.isEmpty(errorBody)
+                        ? "Bad request."
+                        : "Bad request: " + errorBody;
+                    break;
+                default:
+                    message = StringUtils.isEmpty(errorBody)
+                        ? "Graylog server error."
+                        : "Graylog server error: " + errorBody;
+            }
+
+            throw new GraylogServerException(message);
+        }
+
+        if (Objects.isNull(response.body())) {
+            throw new GraylogServerException("Graylog server responded empty HTTP response body.");
+        }
     }
 
     /**
