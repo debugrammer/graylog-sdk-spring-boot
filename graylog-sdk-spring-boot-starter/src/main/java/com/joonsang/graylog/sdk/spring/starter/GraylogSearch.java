@@ -10,7 +10,6 @@ import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,10 +46,7 @@ public class GraylogSearch {
      * @param messageObject message object
      * @return List of message
      * @throws IOException Graylog server failure
-     * @throws NoSuchMethodException if given message object does not have constructor
-     * @throws IllegalAccessException if given message object fails initialization
-     * @throws InvocationTargetException if given message object fails initialization
-     * @throws InstantiationException if given message object fails initialization
+     * @throws ReflectiveOperationException if given message object does not have constructor
      * @since 1.0.0
      */
     public List<?> getMessages(
@@ -59,7 +55,7 @@ public class GraylogSearch {
         LocalDateTime toDateTime,
         String query,
         Class<?> messageObject
-    ) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    ) throws IOException, ReflectiveOperationException {
 
         String filter = "streams:" + streamId;
         String from = fromDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

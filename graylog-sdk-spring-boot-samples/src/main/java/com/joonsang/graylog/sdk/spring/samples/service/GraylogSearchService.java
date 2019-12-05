@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class GraylogSearchService {
         LocalDateTime fromDateTime,
         LocalDateTime toDateTime,
         GraylogQuery query
-    ) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IOException {
+    ) throws IOException, ReflectiveOperationException {
 
         @SuppressWarnings("unchecked")
         List<GraylogMessage> messages = (List<GraylogMessage>) graylogSearch.getMessages(

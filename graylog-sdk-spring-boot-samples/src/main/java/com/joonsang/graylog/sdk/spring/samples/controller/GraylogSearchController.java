@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -33,7 +32,7 @@ public class GraylogSearchController {
     @GetMapping({"/messages/{requestId}"})
     public ResponseEntity<?> getMessageByRequestId(
         @PathVariable("requestId") String requestId
-    ) throws IOException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    ) throws IOException, ReflectiveOperationException {
 
         LocalDateTime fromDateTime = LocalDateTime.now().minusMonths(3);
         LocalDateTime toDateTime = LocalDateTime.now();
