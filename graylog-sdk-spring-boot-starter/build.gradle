@@ -109,4 +109,5 @@ bootJar {
 
 jar {
 	enabled = true
+	exclude('application.properties', 'sample.application.properties')
 }
