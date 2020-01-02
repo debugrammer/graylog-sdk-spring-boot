@@ -33,7 +33,7 @@ graylog.sdk.api.credentials=base64({graylog_access_token}:token)
 graylog.sdk.timezone=US/Eastern
 ```
 
-or `application.yaml`:
+or `application.yml`:
 ```
 # Graylog API Settings
 graylog:
