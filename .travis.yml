@@ -1,6 +1,6 @@
 language: java
 
-sudo: false
+os: linux
 
 jdk:
   - oraclejdk11
