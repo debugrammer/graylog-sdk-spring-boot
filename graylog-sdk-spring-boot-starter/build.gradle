@@ -90,9 +90,9 @@ dependencies {
 	}
 
 	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-	implementation group: 'com.squareup.okhttp3', name:'okhttp', version: '4.2.2'
+	implementation group: 'com.squareup.okhttp3', name:'okhttp', version: '4.3.1'
 	implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
-	implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+	implementation group: 'com.google.guava', name: 'guava', version: '28.2-jre'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 
 	annotationProcessor("org.projectlombok:lombok:1.18.10")
