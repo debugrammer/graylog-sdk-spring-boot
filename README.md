@@ -56,11 +56,11 @@ public YourClassName(GraylogSearch graylogSearch) {
 ```
 
 ## Request Graylog REST APIs
-> Search APIs were moved to `Legacy/Search` section from [Graylog 3.2](https://www.graylog.org/post/announcing-graylog-3-2)
+> `Search` APIs were moved to `Legacy/Search` section from [Graylog 3.2](https://www.graylog.org/post/announcing-graylog-3-2)
 
 Currently, only `Legacy/Search/Absolute` APIs are supported.
 
-### 1. Search
+### 1. Legacy Search Absolute
 
 #### 1.1. Messages
 Message search with absolute time range.
