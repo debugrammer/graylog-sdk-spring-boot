@@ -71,6 +71,9 @@ public class GraylogRequest {
      * @since 1.1.0
      */
     private void validateResponse(Response response) throws IOException {
+        int code = response.code();
+        String codeText = "(HTTP Response Code: " + code + ") ";
+
         if (!response.isSuccessful()) {
             String message;
 
@@ -78,7 +81,7 @@ public class GraylogRequest {
                 ? StringUtils.EMPTY
                 : Objects.requireNonNull(response.body()).string();
 
-            HttpStatus httpStatus = HttpStatus.valueOf(response.code());
+            HttpStatus httpStatus = HttpStatus.valueOf(code);
 
             switch (httpStatus) {
                 case UNAUTHORIZED:
@@ -95,11 +98,11 @@ public class GraylogRequest {
                         : "Graylog server error: " + errorBody;
             }
 
-            throw new GraylogServerException(message);
+            throw new GraylogServerException(codeText + message);
         }
 
         if (Objects.isNull(response.body())) {
-            throw new GraylogServerException("Graylog server responded empty HTTP response body.");
+            throw new GraylogServerException(codeText + "Graylog server responded empty HTTP response body.");
         }
     }
 }
