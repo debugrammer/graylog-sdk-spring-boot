@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,8 +36,8 @@ class GraylogSearchTests {
 
 	@Test
 	void messages() throws IOException, ReflectiveOperationException {
-		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime from = LocalDateTime.now().minusDays(1L);
+		LocalDateTime to = LocalDateTime.now();
 
 		@SuppressWarnings("unchecked")
 		List<TestMessage> messages = (List<TestMessage>) graylogSearch.getMessages(
@@ -54,8 +53,8 @@ class GraylogSearchTests {
 
 	@Test
 	void statistics() throws IOException {
-		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime from = LocalDateTime.now().minusDays(1L);
+		LocalDateTime to = LocalDateTime.now();
 
 		Statistics statistics = graylogSearch.getStatistics(
 			GRAYLOG_STREAM_ID,
@@ -70,8 +69,8 @@ class GraylogSearchTests {
 
 	@Test
 	void histogram() throws IOException {
-		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime from = LocalDateTime.now().minusDays(1L);
+		LocalDateTime to = LocalDateTime.now();
 
 		Histogram histogram = graylogSearch.getHistogram(
 			GRAYLOG_STREAM_ID,
@@ -86,8 +85,8 @@ class GraylogSearchTests {
 
 	@Test
 	void fieldHistogram() throws IOException {
-		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime from = LocalDateTime.now().minusDays(1L);
+		LocalDateTime to = LocalDateTime.now();
 
 		FieldHistogram fieldHistogram = graylogSearch.getFieldHistogram(
 			GRAYLOG_STREAM_ID,
@@ -103,8 +102,8 @@ class GraylogSearchTests {
 
 	@Test
 	void terms() throws IOException {
-		LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		LocalDateTime from = LocalDateTime.now().minusDays(1L);
+		LocalDateTime to = LocalDateTime.now();
 
 		Terms terms = graylogSearch.getTerms(
 			GRAYLOG_STREAM_ID,
