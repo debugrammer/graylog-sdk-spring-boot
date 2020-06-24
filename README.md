@@ -13,13 +13,13 @@ Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
 <dependency>
   <groupId>com.joonsang.graylog</groupId>
   <artifactId>graylog-sdk-spring-boot-starter</artifactId>
-  <version>1.1.7</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
 **Gradle**
 ```
-implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '1.1.7'
+implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '1.2.0'
 ```
 
 ## Usage
@@ -90,6 +90,25 @@ List<YourMessageObject> messages = (List<YourMessageObject>) graylogSearch.getMe
     from,
     to,
     "request_id:AQZ4mfVGVqWKD38XZU7aVG",
+    YourMessageObject.class
+);
+```
+
+If you need messages with paging, try like below.
+```
+LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+int pageSize = 20;
+int pageNo = 1;
+
+@SuppressWarnings("unchecked")
+Page<YourMessageObject> pagedMessages = (Page<YourMessageObject>) graylogSearch.getMessages(
+    "graylog_stream_id",
+    from,
+    to,
+    "request_id:AQZ4mfVGVqWKD38XZU7aVG",
+    pageSize,
+    pageNo,
     YourMessageObject.class
 );
 ```

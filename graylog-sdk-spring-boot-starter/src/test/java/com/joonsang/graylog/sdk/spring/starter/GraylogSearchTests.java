@@ -2,10 +2,7 @@ package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
 import com.joonsang.graylog.sdk.spring.starter.constant.TimeUnit;
-import com.joonsang.graylog.sdk.spring.starter.domain.FieldHistogram;
-import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
-import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
-import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +46,26 @@ class GraylogSearchTests {
 		);
 
 		assertThat(messages).isNotEmpty();
+	}
+
+	@Test
+	void pagedMessages() throws IOException, ReflectiveOperationException {
+		LocalDateTime from = LocalDateTime.now().minusDays(2L);
+		LocalDateTime to = LocalDateTime.now().minusDays(1L);
+
+		@SuppressWarnings("unchecked")
+		Page<TestMessage> pagedMessages = (Page<TestMessage>) graylogSearch.getMessages(
+			GRAYLOG_STREAM_ID,
+			from,
+			to,
+			"message:API_REQUEST_FINISHED",
+			5,
+			1,
+			TestMessage.class
+		);
+
+		assertThat(pagedMessages.getList()).isNotEmpty();
+		assertThat(pagedMessages.getTotalCount()).isNotZero();
 	}
 
 	@Test

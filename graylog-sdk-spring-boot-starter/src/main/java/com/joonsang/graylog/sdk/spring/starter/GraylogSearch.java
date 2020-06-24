@@ -2,11 +2,8 @@ package com.joonsang.graylog.sdk.spring.starter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.joonsang.graylog.sdk.spring.starter.domain.FieldHistogram;
-import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
-import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import com.joonsang.graylog.sdk.spring.starter.search.SearchAbsolute;
-import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -73,13 +70,77 @@ public class GraylogSearch {
             query,
             from,
             to,
+            StringUtils.EMPTY,
+            StringUtils.EMPTY,
             filter
-        );
+        ).getMessages();
 
         return messageMapList
             .stream()
             .map(e -> objectMapper.convertValue(e.get("message"), messageObject))
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Message list with paging.
+     * @param streamId Graylog Stream ID
+     * @param fromDateTime time range start
+     * @param toDateTime time range end
+     * @param query Graylog search query
+     * @param pageSize size of each page
+     * @param pageNo page number
+     * @param messageObject message object
+     * @return List of message with paging
+     * @throws IOException Graylog server failure
+     * @throws ReflectiveOperationException if given message object does not have constructor
+     * @since 1.2.0
+     */
+    public Page<?> getMessages(
+        String streamId,
+        LocalDateTime fromDateTime,
+        LocalDateTime toDateTime,
+        String query,
+        int pageSize,
+        int pageNo,
+        Class<?> messageObject
+    ) throws IOException, ReflectiveOperationException {
+
+        String filter = "streams:" + streamId;
+        String from = fromDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String to = toDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        Map<String, Object> objectMap = objectMapper.convertValue(
+            messageObject.getDeclaredConstructor().newInstance(),
+            new TypeReference<>() {}
+        );
+
+        List<String> fieldList = new ArrayList<>(objectMap.keySet());
+
+        int offset = (pageSize * pageNo) - pageSize;
+
+        MessageList messageList = searchAbsolute.getMessages(
+            StringUtils.join(fieldList, ","),
+            query,
+            from,
+            to,
+            String.valueOf(pageSize),
+            String.valueOf(offset),
+            filter
+        );
+
+        List<Map<String, Map<String, ?>>> messageMapList = messageList.getMessages();
+
+        return Page.builder()
+            .pageNo(pageNo)
+            .pageSize(pageSize)
+            .list(
+                messageMapList
+                    .stream()
+                    .map(e -> objectMapper.convertValue(e.get("message"), messageObject))
+                    .collect(Collectors.toList())
+            )
+            .totalCount(messageList.getTotalCount())
+            .build();
     }
 
     /**

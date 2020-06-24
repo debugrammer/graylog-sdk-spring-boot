@@ -39,16 +39,20 @@ public class SearchAbsolute {
      * @param query Graylog search query
      * @param from time range start
      * @param to time range end
+     * @param limit maximum number of messages to return
+     * @param offset offset
      * @param filter filter
      * @return Message list from Graylog
      * @throws IOException Graylog server failure
      * @since 1.0.0
      */
-    public List<Map<String, Map<String, ?>>> getMessages(
+    public MessageList getMessages(
         String fields,
         String query,
         String from,
         String to,
+        String limit,
+        String offset,
         String filter
     ) throws IOException {
 
@@ -58,6 +62,8 @@ public class SearchAbsolute {
             .addQueryParameter("query", query)
             .addQueryParameter("from", from)
             .addQueryParameter("to", to)
+            .addQueryParameter("limit", limit)
+            .addQueryParameter("offset", offset)
             .addQueryParameter("filter", filter)
             .build();
 
@@ -65,8 +71,12 @@ public class SearchAbsolute {
 
         @SuppressWarnings("unchecked")
         List<Map<String, Map<String, ?>>> messages = JsonPath.parse(body).read("$.messages", List.class);
+        Integer totalCount = JsonPath.parse(body).read("$.total_results", Integer.class);
 
-        return messages;
+        return MessageList.builder()
+            .messages(messages)
+            .totalCount(totalCount)
+            .build();
     }
 
     /**
