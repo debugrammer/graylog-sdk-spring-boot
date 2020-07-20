@@ -94,6 +94,8 @@ dependencies {
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
     implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    implementation group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.0.1'
+    implementation group: 'org.mongodb', name: 'bson', version: '4.0.5'
 
     annotationProcessor("org.projectlombok:lombok:1.18.12")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.12")

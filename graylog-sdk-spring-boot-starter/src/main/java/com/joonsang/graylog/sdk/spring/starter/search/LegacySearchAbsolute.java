@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
  * @author debugrammer
  * @since 1.0.0
  */
-public class SearchAbsolute {
+public class LegacySearchAbsolute {
 
     private final GraylogRequest graylogRequest;
 
     private final GraylogSdkProperties graylogSdkProperties;
 
-    public SearchAbsolute(
+    public LegacySearchAbsolute(
         GraylogRequest graylogRequest,
         GraylogSdkProperties graylogSdkProperties
     ) {

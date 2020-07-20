@@ -3,9 +3,11 @@ package com.joonsang.graylog.sdk.spring.starter.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
+import com.joonsang.graylog.sdk.spring.starter.GraylogLegacySearch;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
-import com.joonsang.graylog.sdk.spring.starter.search.SearchAbsolute;
+import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
+import com.joonsang.graylog.sdk.spring.starter.search.LegacySearchAbsolute;
+import com.joonsang.graylog.sdk.spring.starter.search.Search;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -81,6 +83,20 @@ public class GraylogSdkAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = {"graylogObjectMapper", "graylogOkHttpClient"})
+    @ConditionalOnMissingBean(name = "legacyGraylogSearch")
+    public GraylogLegacySearch legacyGraylogSearch(
+        @Qualifier("graylogObjectMapper") ObjectMapper objectMapper,
+        @Qualifier("graylogOkHttpClient") OkHttpClient okHttpClient
+    ) {
+
+        GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
+        LegacySearchAbsolute absolute = new LegacySearchAbsolute(request, graylogSdkProperties);
+
+        return new GraylogLegacySearch(objectMapper, absolute);
+    }
+
+    @Bean
+    @ConditionalOnBean(name = {"graylogObjectMapper", "graylogOkHttpClient"})
     @ConditionalOnMissingBean(name = "graylogSearch")
     public GraylogSearch graylogSearch(
         @Qualifier("graylogObjectMapper") ObjectMapper objectMapper,
@@ -88,8 +104,8 @@ public class GraylogSdkAutoConfiguration {
     ) {
 
         GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
-        SearchAbsolute absolute = new SearchAbsolute(request, graylogSdkProperties);
+        Search search = new Search(request, graylogSdkProperties, objectMapper);
 
-        return new GraylogSearch(objectMapper, absolute);
+        return new GraylogSearch(search);
     }
 }
