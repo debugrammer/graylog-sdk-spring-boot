@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Search with absolute time range.
+ * Legacy search with absolute time range.
  * @author debugrammer
  * @since 1.0.0
  */

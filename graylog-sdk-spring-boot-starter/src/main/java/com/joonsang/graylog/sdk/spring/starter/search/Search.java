@@ -13,6 +13,11 @@ import org.bson.types.ObjectId;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Search
+ * @author debugrammer
+ * @since 2.0.0
+ */
 public class Search {
 
     private static final MediaType CONTENT_TYPE_JSON = MediaType.get("application/json; charset=utf-8");
@@ -89,7 +94,7 @@ public class Search {
             .addQueryParameter("timeout", "60000")
             .build();
 
-        String body = graylogRequest.httpPostRequest(jsonBody, httpUrl);
+        String body = graylogRequest.httpPostRequest(httpUrl, jsonBody);
 
         System.out.println(body);
     }

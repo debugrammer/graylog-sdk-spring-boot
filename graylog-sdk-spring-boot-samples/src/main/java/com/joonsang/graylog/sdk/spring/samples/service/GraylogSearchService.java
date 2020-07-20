@@ -5,7 +5,7 @@ import com.joonsang.graylog.sdk.spring.samples.domain.FieldHistograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
-import com.joonsang.graylog.sdk.spring.starter.GraylogLegacySearch;
+import com.joonsang.graylog.sdk.spring.starter.LegacyGraylogSearch;
 import com.joonsang.graylog.sdk.spring.starter.domain.FieldHistogram;
 import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
 import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
@@ -24,15 +24,15 @@ public class GraylogSearchService {
 
     private final String GRAYLOG_STREAM_ID;
 
-    private final GraylogLegacySearch graylogLegacySearch;
+    private final LegacyGraylogSearch legacyGraylogSearch;
 
     public GraylogSearchService(
         @Value("${graylog.streamId}") String graylogStreamId,
-        GraylogLegacySearch graylogLegacySearch
+        LegacyGraylogSearch legacyGraylogSearch
     ) {
 
         this.GRAYLOG_STREAM_ID = graylogStreamId;
-        this.graylogLegacySearch = graylogLegacySearch;
+        this.legacyGraylogSearch = legacyGraylogSearch;
     }
 
     public GraylogMessage getMessage(
@@ -42,7 +42,7 @@ public class GraylogSearchService {
     ) throws IOException, ReflectiveOperationException {
 
         @SuppressWarnings("unchecked")
-        List<GraylogMessage> messages = (List<GraylogMessage>) graylogLegacySearch.getMessages(
+        List<GraylogMessage> messages = (List<GraylogMessage>) legacyGraylogSearch.getMessages(
             GRAYLOG_STREAM_ID,
             fromDateTime,
             toDateTime,
@@ -68,7 +68,7 @@ public class GraylogSearchService {
 
         return TwoStatistics.builder()
             .first(
-                graylogLegacySearch.getStatistics(
+                legacyGraylogSearch.getStatistics(
                     GRAYLOG_STREAM_ID,
                     field,
                     firstDateTime,
@@ -77,7 +77,7 @@ public class GraylogSearchService {
                 )
             )
             .second(
-                graylogLegacySearch.getStatistics(
+                legacyGraylogSearch.getStatistics(
                     GRAYLOG_STREAM_ID,
                     field,
                     secondDateTime,
@@ -95,7 +95,7 @@ public class GraylogSearchService {
         GraylogQuery query
     ) throws IOException {
 
-        Histogram all = graylogLegacySearch.getHistogram(
+        Histogram all = legacyGraylogSearch.getHistogram(
             GRAYLOG_STREAM_ID,
             interval,
             fromDateTime,
@@ -105,7 +105,7 @@ public class GraylogSearchService {
                 .build()
         );
 
-        Histogram first = graylogLegacySearch.getHistogram(
+        Histogram first = legacyGraylogSearch.getHistogram(
             GRAYLOG_STREAM_ID,
             interval,
             fromDateTime,
@@ -115,7 +115,7 @@ public class GraylogSearchService {
                 .build()
         );
 
-        Histogram second = graylogLegacySearch.getHistogram(
+        Histogram second = legacyGraylogSearch.getHistogram(
             GRAYLOG_STREAM_ID,
             interval,
             fromDateTime,
@@ -139,7 +139,7 @@ public class GraylogSearchService {
         GraylogQuery query
     ) throws IOException {
 
-        Terms sourceRanking = graylogLegacySearch.getTerms(
+        Terms sourceRanking = legacyGraylogSearch.getTerms(
             GRAYLOG_STREAM_ID,
             "source",
             "",
@@ -159,7 +159,7 @@ public class GraylogSearchService {
 
             labels.add(source);
             fieldHistograms.add(
-                graylogLegacySearch.getFieldHistogram(
+                legacyGraylogSearch.getFieldHistogram(
                     GRAYLOG_STREAM_ID,
                     "process_time",
                     interval,
@@ -189,7 +189,7 @@ public class GraylogSearchService {
         GraylogQuery query
     ) throws IOException {
 
-        return graylogLegacySearch.getTerms(
+        return legacyGraylogSearch.getTerms(
             GRAYLOG_STREAM_ID,
             field,
             stackedFields,

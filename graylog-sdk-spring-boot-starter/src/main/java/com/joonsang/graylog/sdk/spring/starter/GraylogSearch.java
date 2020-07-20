@@ -5,6 +5,11 @@ import com.joonsang.graylog.sdk.spring.starter.search.Search;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Graylog Search
+ * @author debugrammer
+ * @since 2.0.0
+ */
 public class GraylogSearch {
 
     private final Search search;

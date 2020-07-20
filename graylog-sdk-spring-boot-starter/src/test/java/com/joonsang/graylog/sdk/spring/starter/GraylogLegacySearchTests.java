@@ -29,7 +29,7 @@ class GraylogLegacySearchTests {
 	String GRAYLOG_STREAM_ID;
 
 	@Autowired
-	GraylogLegacySearch graylogLegacySearch;
+    LegacyGraylogSearch legacyGraylogSearch;
 
 	@Test
 	void messages() throws IOException, ReflectiveOperationException {
@@ -37,7 +37,7 @@ class GraylogLegacySearchTests {
 		LocalDateTime to = LocalDateTime.now();
 
 		@SuppressWarnings("unchecked")
-		List<TestMessage> messages = (List<TestMessage>) graylogLegacySearch.getMessages(
+		List<TestMessage> messages = (List<TestMessage>) legacyGraylogSearch.getMessages(
 			GRAYLOG_STREAM_ID,
 			from,
 			to,
@@ -54,7 +54,7 @@ class GraylogLegacySearchTests {
 		LocalDateTime to = LocalDateTime.now().minusDays(1L);
 
 		@SuppressWarnings("unchecked")
-		Page<TestMessage> pagedMessages = (Page<TestMessage>) graylogLegacySearch.getMessages(
+		Page<TestMessage> pagedMessages = (Page<TestMessage>) legacyGraylogSearch.getMessages(
 			GRAYLOG_STREAM_ID,
 			from,
 			to,
@@ -73,7 +73,7 @@ class GraylogLegacySearchTests {
 		LocalDateTime from = LocalDateTime.now().minusDays(1L);
 		LocalDateTime to = LocalDateTime.now();
 
-		Statistics statistics = graylogLegacySearch.getStatistics(
+		Statistics statistics = legacyGraylogSearch.getStatistics(
 			GRAYLOG_STREAM_ID,
 			"process_time",
 			from,
@@ -89,7 +89,7 @@ class GraylogLegacySearchTests {
 		LocalDateTime from = LocalDateTime.now().minusDays(1L);
 		LocalDateTime to = LocalDateTime.now();
 
-		Histogram histogram = graylogLegacySearch.getHistogram(
+		Histogram histogram = legacyGraylogSearch.getHistogram(
 			GRAYLOG_STREAM_ID,
 			TimeUnit.HOUR,
 			from,
@@ -105,7 +105,7 @@ class GraylogLegacySearchTests {
 		LocalDateTime from = LocalDateTime.now().minusDays(1L);
 		LocalDateTime to = LocalDateTime.now();
 
-		FieldHistogram fieldHistogram = graylogLegacySearch.getFieldHistogram(
+		FieldHistogram fieldHistogram = legacyGraylogSearch.getFieldHistogram(
 			GRAYLOG_STREAM_ID,
 			"process_time",
 			TimeUnit.HOUR,
@@ -122,7 +122,7 @@ class GraylogLegacySearchTests {
 		LocalDateTime from = LocalDateTime.now().minusDays(1L);
 		LocalDateTime to = LocalDateTime.now();
 
-		Terms terms = graylogLegacySearch.getTerms(
+		Terms terms = legacyGraylogSearch.getTerms(
 			GRAYLOG_STREAM_ID,
 			"process_time",
 			StringUtils.EMPTY,

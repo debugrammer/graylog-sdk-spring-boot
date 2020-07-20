@@ -52,14 +52,13 @@ public class GraylogRequest {
     /**
      * HTTP POST request.
      * @param httpUrl OkHttp HttpUrl object
+     * @param requestBody OkHttp RequestBody object
      * @return Response from Graylog
      * @throws IOException Graylog server failure
      * @since 2.0.0
      */
-    public String httpPostRequest(RequestBody requestBody, HttpUrl httpUrl) throws IOException {
+    public String httpPostRequest(HttpUrl httpUrl, RequestBody requestBody) throws IOException {
         Request request = new Request.Builder()
-            .header("X-Requested-By", "XMLHttpRequest")
-            .header("X-Requested-With", "XMLHttpRequest")
             .url(httpUrl)
             .post(requestBody)
             .build();

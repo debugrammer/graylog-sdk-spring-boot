@@ -15,17 +15,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Graylog Search
+ * Legacy Graylog Search
  * @author debugrammer
  * @since 1.0.0
  */
-public class GraylogLegacySearch {
+public class LegacyGraylogSearch {
 
     private final ObjectMapper objectMapper;
 
     private final LegacySearchAbsolute legacySearchAbsolute;
 
-    public GraylogLegacySearch(
+    public LegacyGraylogSearch(
         ObjectMapper objectMapper,
         LegacySearchAbsolute legacySearchAbsolute
     ) {
