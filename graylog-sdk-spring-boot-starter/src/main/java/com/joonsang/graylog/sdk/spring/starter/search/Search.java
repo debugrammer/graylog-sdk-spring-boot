@@ -1,19 +1,16 @@
 package com.joonsang.graylog.sdk.spring.starter.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import org.bson.types.ObjectId;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Search
@@ -42,11 +39,9 @@ public class Search {
     }
 
     public void sample(List<String> streamIds) throws IOException {
-        List<SearchFilter> filters = new ArrayList<>();
-
-        for (String streamId : streamIds) {
-            filters.add(SearchFilter.builder().id(streamId).build());
-        }
+        List<SearchFilter> filters = streamIds.stream()
+            .map(streamId -> SearchFilter.builder().id(streamId).build())
+            .collect(Collectors.toList());
 
         com.joonsang.graylog.sdk.spring.starter.domain.Search search =
             com.joonsang.graylog.sdk.spring.starter.domain.Search.builder()
