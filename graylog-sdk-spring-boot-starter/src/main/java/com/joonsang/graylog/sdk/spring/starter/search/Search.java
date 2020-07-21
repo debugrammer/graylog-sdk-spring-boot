@@ -5,12 +5,14 @@ import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,53 +42,36 @@ public class Search {
     }
 
     public void sample(List<String> streamIds) throws IOException {
-        ObjectId id = new ObjectId();
+        List<SearchFilter> filters = new ArrayList<>();
 
-        RandomBasedGenerator generator = Generators.randomBasedGenerator();
+        for (String streamId : streamIds) {
+            filters.add(SearchFilter.builder().id(streamId).build());
+        }
 
-        String requestJson = "{\n" +
-                "  \"id\": \"" + id + "\",\n" +
-                "  \"queries\": [\n" +
-                "    {\n" +
-                "      \"id\": \"" + generator.generate().toString() + "\",\n" +
-                "      \"query\": {\n" +
-                "        \"type\": \"elasticsearch\",\n" +
-                "        \"query_string\": \"\"\n" +
-                "      },\n" +
-                "      \"timerange\": {\n" +
-                "        \"type\": \"relative\",\n" +
-                "        \"range\": 300\n" +
-                "      },\n" +
-                "      \"search_types\": [\n" +
-                "        {\n" +
-                "          \"name\": \"chart\",\n" +
-                "          \"streams\": [\"" + streamIds.get(0) + "\"],\n" +
-                "          \"series\": [\n" +
-                "            {\n" +
-                "              \"id\": \"count()\",\n" +
-                "              \"type\": \"count\"\n" +
-                "            }\n" +
-                "          ],\n" +
-                "          \"rollup\": true,\n" +
-                "          \"row_groups\": [\n" +
-                "            {\n" +
-                "              \"type\": \"values\",\n" +
-                "              \"field\": \"client_name\",\n" +
-                "              \"limit\": 15\n" +
-                "            }\n" +
-                "          ],\n" +
-                "          \"type\": \"pivot\",\n" +
-                "          \"id\": \"" + generator.generate().toString() + "\",\n" +
-                "          \"column_groups\": [],\n" +
-                "          \"sort\": []\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"parameters\": []\n" +
-                "}";
+        com.joonsang.graylog.sdk.spring.starter.domain.Search search =
+            com.joonsang.graylog.sdk.spring.starter.domain.Search.builder()
+                .query(
+                    Query.builder()
+                        .filter(Filter.builder().filters(filters).build())
+                        .query(SearchQuery.builder().build())
+                        .timerange(Timerange.builder().type("relative").range(300).build())
+                        .searchType(
+                            SearchType.builder()
+                                .name("chart")
+                                .series(List.of(Series.builder().id("count()").type("count").build()))
+                                .rollup(true)
+                                .rowGroup(
+                                    SearchTypePivot.builder().type("values").field("client_name").limit(15).build()
+                                )
+                                .sort(List.of())
+                                .type("pivot")
+                                .build()
+                        )
+                        .build()
+                )
+                .build();
 
-//        String requestJson = objectMapper.writeValueAsString(webhookRequest);
+        String requestJson = objectMapper.writeValueAsString(search);
         RequestBody jsonBody = RequestBody.create(requestJson, CONTENT_TYPE_JSON);
 
         HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()

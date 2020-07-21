@@ -1,6 +1,6 @@
 package com.joonsang.graylog.sdk.spring.samples.domain;
 
-import com.joonsang.graylog.sdk.spring.starter.domain.Statistics;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Statistics;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

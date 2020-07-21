@@ -6,7 +6,7 @@ import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
 import com.joonsang.graylog.sdk.spring.samples.service.GraylogSearchService;
-import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Terms;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -6,10 +6,10 @@ import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
 import com.joonsang.graylog.sdk.spring.starter.LegacyGraylogSearch;
-import com.joonsang.graylog.sdk.spring.starter.domain.FieldHistogram;
-import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
-import com.joonsang.graylog.sdk.spring.starter.domain.Terms;
-import com.joonsang.graylog.sdk.spring.starter.domain.TermsData;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.FieldHistogram;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Histogram;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Terms;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.TermsData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

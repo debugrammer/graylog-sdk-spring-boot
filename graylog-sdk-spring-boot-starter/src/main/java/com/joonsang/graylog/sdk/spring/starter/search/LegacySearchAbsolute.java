@@ -5,6 +5,7 @@ import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.GraylogUtils;
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.*;
 import okhttp3.HttpUrl;
 import org.apache.commons.lang3.StringUtils;
 

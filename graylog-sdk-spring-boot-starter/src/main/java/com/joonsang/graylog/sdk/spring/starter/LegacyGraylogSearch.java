@@ -3,6 +3,10 @@ package com.joonsang.graylog.sdk.spring.starter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.FieldHistogram;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Histogram;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Statistics;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Terms;
 import com.joonsang.graylog.sdk.spring.starter.search.LegacySearchAbsolute;
 import org.apache.commons.lang3.StringUtils;
 

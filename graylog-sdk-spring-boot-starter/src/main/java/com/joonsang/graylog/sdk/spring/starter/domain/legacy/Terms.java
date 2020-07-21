@@ -1,4 +1,4 @@
-package com.joonsang.graylog.sdk.spring.starter.domain;
+package com.joonsang.graylog.sdk.spring.starter.domain.legacy;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Terms Domain
+ * Legacy Terms Domain
  * @author debugrammer
  * @since 1.0.0
  */
