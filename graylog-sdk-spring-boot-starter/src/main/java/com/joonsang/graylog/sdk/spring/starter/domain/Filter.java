@@ -6,6 +6,11 @@ import lombok.Singular;
 
 import java.util.List;
 
+/**
+ * Filter
+ * @author debugrammer
+ * @since 2.0.0
+ */
 @Builder
 @Getter
 public class Filter {

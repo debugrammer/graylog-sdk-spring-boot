@@ -2,7 +2,9 @@ package com.joonsang.graylog.sdk.spring.starter.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
-import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties;
+import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
+import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypeType;
+import com.joonsang.graylog.sdk.spring.starter.constant.TimeRangeType;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -23,18 +25,18 @@ public class Search {
 
     private final GraylogRequest graylogRequest;
 
-    private final GraylogSdkProperties graylogSdkProperties;
+    private final GraylogApiProperties graylogApiProperties;
 
     private final ObjectMapper objectMapper;
 
     public Search(
         GraylogRequest graylogRequest,
-        GraylogSdkProperties graylogSdkProperties,
+        GraylogApiProperties graylogApiProperties,
         ObjectMapper objectMapper
     ) {
 
         this.graylogRequest = graylogRequest;
-        this.graylogSdkProperties = graylogSdkProperties;
+        this.graylogApiProperties = graylogApiProperties;
         this.objectMapper = objectMapper;
     }
 
@@ -49,7 +51,7 @@ public class Search {
                     Query.builder()
                         .filter(Filter.builder().filters(filters).build())
                         .query(SearchQuery.builder().build())
-                        .timerange(Timerange.builder().type("relative").range(300).build())
+                        .timerange(Timerange.builder().type(TimeRangeType.relative).range(300).build())
                         .searchType(
                             SearchType.builder()
                                 .name("chart")
@@ -59,7 +61,7 @@ public class Search {
                                     SearchTypePivot.builder().type("values").field("client_name").limit(15).build()
                                 )
                                 .sort(List.of())
-                                .type("pivot")
+                                .type(SearchTypeType.pivot)
                                 .build()
                         )
                         .build()
@@ -71,7 +73,7 @@ public class Search {
 
         HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()
             .addPathSegments("api/views/search/sync")
-            .addQueryParameter("timeout", "60000")
+            .addQueryParameter("timeout", String.valueOf(graylogApiProperties.getTimeout()))
             .build();
 
         String body = graylogRequest.httpPostRequest(httpUrl, jsonBody);

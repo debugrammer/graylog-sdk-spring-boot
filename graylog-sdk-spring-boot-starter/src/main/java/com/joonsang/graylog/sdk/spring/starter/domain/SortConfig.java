@@ -1,20 +1,29 @@
 package com.joonsang.graylog.sdk.spring.starter.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.joonsang.graylog.sdk.spring.starter.constant.SortConfigDirection;
+import com.joonsang.graylog.sdk.spring.starter.constant.SortConfigOrder;
+import com.joonsang.graylog.sdk.spring.starter.constant.SortConfigType;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * Sort Config
+ * @author debugrammer
+ * @since 2.0.0
+ */
 @Builder
 @Getter
 public class SortConfig {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final String type;
+    private final SortConfigType type;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final String direction;
+    private final SortConfigDirection direction;
 
     private final String field;
 
-    private final String order;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final SortConfigOrder order;
 }

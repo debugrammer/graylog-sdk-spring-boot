@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * Search Query
+ * @author debugrammer
+ * @since 2.0.0
+ */
 @Builder
 @Getter
 public class SearchQuery {

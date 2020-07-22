@@ -106,7 +106,7 @@ public class GraylogSdkAutoConfiguration {
     ) {
 
         GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
-        Search search = new Search(request, graylogSdkProperties, objectMapper);
+        Search search = new Search(request, graylogApiProperties, objectMapper);
 
         return new GraylogSearch(search);
     }

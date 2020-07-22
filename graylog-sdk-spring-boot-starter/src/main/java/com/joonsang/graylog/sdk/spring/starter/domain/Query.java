@@ -9,6 +9,11 @@ import lombok.Singular;
 
 import java.util.List;
 
+/**
+ * Query
+ * @author debugrammer
+ * @since 2.0.0
+ */
 @Builder
 @Getter
 public class Query {

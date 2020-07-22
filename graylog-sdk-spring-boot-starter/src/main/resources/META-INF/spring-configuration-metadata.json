@@ -46,6 +46,13 @@
       "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
       "defaultValue": "",
       "description": "Graylog REST API credentials."
+    },
+    {
+      "name": "graylog.sdk.api.timeout",
+      "type": "java.lang.Long",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "defaultValue": 60000,
+      "description": "Graylog REST API timeout."
     }
   ],
   "hints": []

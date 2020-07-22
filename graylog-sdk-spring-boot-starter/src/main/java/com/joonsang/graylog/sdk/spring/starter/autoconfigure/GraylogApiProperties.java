@@ -21,4 +21,6 @@ public class GraylogApiProperties {
     private Integer port = 9000;
 
     private String credentials = "";
+
+    private Long timeout = 60000L;
 }

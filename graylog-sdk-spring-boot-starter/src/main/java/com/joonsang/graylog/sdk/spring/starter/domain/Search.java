@@ -7,6 +7,11 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
+/**
+ * Search
+ * @author debugrammer
+ * @since 2.0.0
+ */
 @Builder
 @Getter
 public class Search {
