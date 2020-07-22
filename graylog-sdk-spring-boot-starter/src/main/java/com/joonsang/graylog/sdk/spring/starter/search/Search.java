@@ -83,7 +83,7 @@ public class Search {
             .searchType(searchType)
             .build();
 
-        String body = search(com.joonsang.graylog.sdk.spring.starter.domain.Search.builder().query(query).build());
+        String body = syncSearch(com.joonsang.graylog.sdk.spring.starter.domain.Search.builder().query(query).build());
 
         String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId();
 
@@ -126,10 +126,17 @@ public class Search {
                 )
                 .build();
 
-        System.out.println(search(search));
+        System.out.println(syncSearch(search));
     }
 
-    private String search(com.joonsang.graylog.sdk.spring.starter.domain.Search search) throws IOException {
+    /**
+     * Perform synchronous search.
+     * @param search time range object
+     * @return Response body from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    private String syncSearch(com.joonsang.graylog.sdk.spring.starter.domain.Search search) throws IOException {
         String requestJson = objectMapper.writeValueAsString(search);
         RequestBody jsonBody = RequestBody.create(requestJson, CONTENT_TYPE_JSON);
 
