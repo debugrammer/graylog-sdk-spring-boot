@@ -79,8 +79,7 @@ public class LegacyGraylogSearch {
             filter
         ).getMessages();
 
-        return messageMapList
-            .stream()
+        return messageMapList.stream()
             .map(e -> objectMapper.convertValue(e.get("message"), messageObject))
             .collect(Collectors.toList());
     }
@@ -138,8 +137,7 @@ public class LegacyGraylogSearch {
             .pageNo(pageNo)
             .pageSize(pageSize)
             .list(
-                messageMapList
-                    .stream()
+                messageMapList.stream()
                     .map(e -> objectMapper.convertValue(e.get("message"), messageObject))
                     .collect(Collectors.toList())
             )

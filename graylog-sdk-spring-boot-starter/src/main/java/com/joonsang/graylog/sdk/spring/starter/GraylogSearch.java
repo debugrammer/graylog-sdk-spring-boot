@@ -1,10 +1,7 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.joonsang.graylog.sdk.spring.starter.domain.MessageList;
-import com.joonsang.graylog.sdk.spring.starter.domain.Page;
-import com.joonsang.graylog.sdk.spring.starter.domain.SortConfig;
-import com.joonsang.graylog.sdk.spring.starter.domain.Timerange;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import com.joonsang.graylog.sdk.spring.starter.search.Search;
 
 import java.io.IOException;
@@ -23,11 +20,7 @@ public class GraylogSearch {
 
     private final Search search;
 
-    public GraylogSearch(
-        ObjectMapper objectMapper,
-        Search search
-    ) {
-
+    public GraylogSearch(ObjectMapper objectMapper, Search search) {
         this.objectMapper = objectMapper;
         this.search = search;
     }
@@ -73,7 +66,14 @@ public class GraylogSearch {
             .build();
     }
 
-    public void sample(String query, List<String> streamIds) throws IOException {
-        search.sample(query, streamIds);
+    /**
+     * Raw search.
+     * @param searchSpec Graylog search spec object
+     * @return Response body from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public String raw(SearchSpec searchSpec) throws IOException {
+        return search.syncSearch(searchSpec);
     }
 }

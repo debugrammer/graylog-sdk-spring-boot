@@ -1,11 +1,10 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
+import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypeType;
 import com.joonsang.graylog.sdk.spring.starter.constant.SortConfigOrder;
 import com.joonsang.graylog.sdk.spring.starter.constant.TimeRangeType;
-import com.joonsang.graylog.sdk.spring.starter.domain.Page;
-import com.joonsang.graylog.sdk.spring.starter.domain.SortConfig;
-import com.joonsang.graylog.sdk.spring.starter.domain.Timerange;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest(
     classes = {
@@ -50,7 +50,36 @@ public class GraylogSearchTests {
     }
 
     @Test
-    void sample() throws IOException {
-        graylogSearch.sample("message:API_REQUEST_FINISHED", List.of(GRAYLOG_STREAM_ID));
+    void raw() throws IOException {
+        List<String> streamIds = List.of(GRAYLOG_STREAM_ID);
+
+        List<SearchFilter> filters = streamIds.stream()
+            .map(streamId -> SearchFilter.builder().id(streamId).build())
+            .collect(Collectors.toList());
+
+        SearchSpec searchSpec = SearchSpec.builder()
+            .query(
+                Query.builder()
+                    .filter(Filter.builder().filters(filters).build())
+                    .query(SearchQuery.builder().queryString("message:API_REQUEST_FINISHED").build())
+                    .timerange(Timerange.builder().type(TimeRangeType.relative).range(300).build())
+                    .searchType(
+                        SearchType.builder()
+                            .name("chart")
+                            .series(List.of(Series.builder().id("count()").type("count").build()))
+                            .rollup(true)
+                            .rowGroups(
+                                List.of(SearchTypePivot.builder().type("values").field("client_name").limit(15).build())
+                            )
+                            .columnGroups(List.of())
+                            .sort(List.of())
+                            .type(SearchTypeType.pivot)
+                            .build()
+                    )
+                    .build()
+            )
+            .build();
+
+        System.out.println(graylogSearch.raw(searchSpec));
     }
 }

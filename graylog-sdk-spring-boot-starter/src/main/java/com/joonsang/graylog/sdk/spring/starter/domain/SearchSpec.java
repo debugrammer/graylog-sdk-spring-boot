@@ -8,13 +8,13 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 /**
- * Search
+ * Search Specification
  * @author debugrammer
  * @since 2.0.0
  */
 @Builder
 @Getter
-public class Search {
+public class SearchSpec {
 
     @Builder.Default
     private final String id = new ObjectId().toString();
