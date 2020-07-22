@@ -1,6 +1,7 @@
 package com.joonsang.graylog.sdk.spring.starter.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypePivotType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +14,7 @@ import lombok.Getter;
 @Getter
 public class SearchTypePivot {
 
-    private final String type;
+    private final SearchTypePivotType type;
 
     private final String field;
 

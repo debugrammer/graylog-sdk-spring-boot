@@ -1,9 +1,7 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
-import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypeType;
-import com.joonsang.graylog.sdk.spring.starter.constant.SortConfigOrder;
-import com.joonsang.graylog.sdk.spring.starter.constant.TimeRangeType;
+import com.joonsang.graylog.sdk.spring.starter.constant.*;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,10 +64,16 @@ public class GraylogSearchTests {
                     .searchType(
                         SearchType.builder()
                             .name("chart")
-                            .series(List.of(Series.builder().id("count()").type("count").build()))
+                            .series(List.of(Series.builder().type(SeriesType.count).build()))
                             .rollup(true)
                             .rowGroups(
-                                List.of(SearchTypePivot.builder().type("values").field("client_name").limit(15).build())
+                                List.of(
+                                    SearchTypePivot.builder()
+                                        .type(SearchTypePivotType.values)
+                                        .field("client_name")
+                                        .limit(15)
+                                        .build()
+                                )
                             )
                             .columnGroups(List.of())
                             .sort(List.of())
