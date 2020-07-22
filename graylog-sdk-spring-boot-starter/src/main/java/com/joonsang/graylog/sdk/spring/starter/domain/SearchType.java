@@ -45,12 +45,10 @@ public class SearchType {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<Series> series;
 
-    @Singular
     @JsonProperty("column_groups")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<SearchTypePivot> columnGroups;
 
-    @Singular
     @JsonProperty("row_groups")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<SearchTypePivot> rowGroups;
