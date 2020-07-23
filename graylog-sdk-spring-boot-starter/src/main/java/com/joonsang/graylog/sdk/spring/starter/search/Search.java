@@ -10,12 +10,10 @@ import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -144,7 +142,7 @@ public class Search {
                 Collectors.toMap(
                     map -> (String) map.get("id"),
                     map -> Map.of(
-                        "field", (String) map.get("field"),
+                        "field", Objects.requireNonNullElse((String) map.get("field"), StringUtils.EMPTY),
                         "type", (String) map.get("type"),
                         "percentile", String.valueOf((map.get("percentile")))
                     )

@@ -56,7 +56,9 @@ public class GraylogSearchTests {
             Series.builder().type(SeriesType.min).field("process_time").build(),
             Series.builder().type(SeriesType.max).field("process_time").build(),
             Series.builder().type(SeriesType.percentile).percentile(95.0f).field("process_time").build(),
-            Series.builder().type(SeriesType.percentile).percentile(99.0f).field("process_time").build()
+            Series.builder().type(SeriesType.percentile).percentile(99.0f).field("process_time").build(),
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.card).field("source").build()
         );
 
         List<Statistics> statistics = graylogSearch.getStatistics(
