@@ -7,5 +7,5 @@ package com.joonsang.graylog.sdk.spring.starter.constant;
  */
 public enum SearchTypeType {
 
-    pivot, series, messages
+    pivot, messages
 }

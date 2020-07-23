@@ -48,6 +48,28 @@ public class GraylogSearchTests {
     }
 
     @Test
+    void statistics() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.avg).field("process_time").build(),
+            Series.builder().type(SeriesType.count).field("process_time").build(),
+            Series.builder().type(SeriesType.min).field("process_time").build(),
+            Series.builder().type(SeriesType.max).field("process_time").build(),
+            Series.builder().type(SeriesType.percentile).percentile(95.0f).field("process_time").build(),
+            Series.builder().type(SeriesType.percentile).percentile(99.0f).field("process_time").build()
+        );
+
+        List<Statistics> statistics = graylogSearch.getStatistics(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            "message:API_REQUEST_FINISHED",
+            seriesList
+        );
+
+        System.out.println(statistics.toString());
+    }
+
+    @Test
     void raw() throws IOException {
         List<String> streamIds = List.of(GRAYLOG_STREAM_ID);
 

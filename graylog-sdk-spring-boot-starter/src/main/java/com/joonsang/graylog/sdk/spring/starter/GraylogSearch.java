@@ -27,12 +27,12 @@ public class GraylogSearch {
 
     /**
      * Message list with paging.
-     * @param streamIds Graylog Stream ID list
-     * @param timerange time range object
+     * @param streamIds Graylog stream ID list
+     * @param timerange Graylog time range object
      * @param searchQuery Graylog search query
      * @param pageSize size of each page
      * @param pageNo page number
-     * @param sort sort config object
+     * @param sort Graylog sort config object
      * @param messageObject message object
      * @return List of message with paging
      * @throws IOException Graylog server failure
@@ -64,6 +64,26 @@ public class GraylogSearch {
             )
             .totalCount(messageList.getTotalCount())
             .build();
+    }
+
+    /**
+     * Statistics.
+     * @param streamIds Graylog stream ID list
+     * @param timerange Graylog time range object
+     * @param searchQuery Graylog search query
+     * @param seriesList Gralog series object list
+     * @return Statistics from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public List<Statistics> getStatistics(
+        List<String> streamIds,
+        Timerange timerange,
+        String searchQuery,
+        List<Series> seriesList
+    ) throws IOException {
+
+        return search.getStatistics(timerange, searchQuery, seriesList, streamIds);
     }
 
     /**
