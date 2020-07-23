@@ -16,14 +16,23 @@ import lombok.Getter;
 @Getter
 public class SortConfig {
 
+    /**
+     * Work with SearchTypeType.pivot type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final SortConfigType type;
 
+    /**
+     * Work with SearchTypeType.pivot type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final SortConfigDirection direction;
 
     private final String field;
 
+    /**
+     * Work with SearchTypeType.messages type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final SortConfigOrder order;
 }

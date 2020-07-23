@@ -29,6 +29,9 @@ public class Series {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String field;
 
+    /**
+     * Work with SeriesType.percentile type of {@link Series}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Float percentile;
 

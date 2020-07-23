@@ -42,27 +42,48 @@ public class SearchType {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<SortConfig> sort;
 
+    /**
+     * Work with SearchTypeType.pivot type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<Series> series;
 
+    /**
+     * Work with SearchTypeType.pivot type of {@link SearchType}
+     */
     @JsonProperty("column_groups")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<SearchTypePivot> columnGroups;
 
+    /**
+     * Work with SearchTypeType.pivot type of {@link SearchType}
+     */
     @JsonProperty("row_groups")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<SearchTypePivot> rowGroups;
 
+    /**
+     * Work with SearchTypeType.pivot type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Boolean rollup;
 
+    /**
+     * Work with SearchTypeType.messages type of {@link SearchType}
+     */
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<Decorator> decorators;
 
+    /**
+     * Work with SearchTypeType.messages type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Integer limit;
 
+    /**
+     * Work with SearchTypeType.messages type of {@link SearchType}
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Integer offset;
 }
