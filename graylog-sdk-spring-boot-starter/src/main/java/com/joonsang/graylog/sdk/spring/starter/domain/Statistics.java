@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Statistics
+ * Stats
  * @author debugrammer
  * @since 2.0.0
  */

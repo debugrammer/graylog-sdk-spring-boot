@@ -140,16 +140,16 @@ public class Search {
         Map<String, Map<String, String>> keyMap = requestSeries.stream()
             .collect(
                 Collectors.toMap(
-                    map -> (String) map.get("id"),
-                    map -> Map.of(
-                        "field", Objects.requireNonNullElse((String) map.get("field"), StringUtils.EMPTY),
-                        "type", (String) map.get("type"),
-                        "percentile", String.valueOf((map.get("percentile")))
+                    series -> (String) series.get("id"),
+                    series -> Map.of(
+                        "field", Objects.requireNonNullElse((String) series.get("field"), StringUtils.EMPTY),
+                        "type", (String) series.get("type"),
+                        "percentile", String.valueOf((series.get("percentile")))
                     )
                 )
             );
 
-        Map<String, Statistics> statisticsFieldMap = new HashMap<>();
+        Map<String, Statistics> statsFieldMap = new HashMap<>();
 
         for (Map<String, ?> valueMap : values) {
             @SuppressWarnings("unchecked")
@@ -160,62 +160,102 @@ public class Search {
             String type = keyMap.get(id).get("type");
             String percentile = keyMap.get(id).get("percentile");
 
-            if (!statisticsFieldMap.containsKey(field)) {
-                statisticsFieldMap.put(field, new Statistics());
-                statisticsFieldMap.get(field).setField(field);
+            if (!statsFieldMap.containsKey(field)) {
+                statsFieldMap.put(field, new Statistics());
+                statsFieldMap.get(field).setField(field);
             }
 
             if (type.equals(SeriesType.avg.toString())) {
-                statisticsFieldMap.get(field).setAverage((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setAverage((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.card.toString())) {
-                statisticsFieldMap.get(field).setCardinality((Integer) valueMap.get("value"));
+                statsFieldMap.get(field).setCardinality((Integer) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.count.toString())) {
-                statisticsFieldMap.get(field).setCount((Integer) valueMap.get("value"));
+                statsFieldMap.get(field).setCount((Integer) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.max.toString())) {
-                statisticsFieldMap.get(field).setMax((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setMax((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.min.toString())) {
-                statisticsFieldMap.get(field).setMin((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setMin((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.stddev.toString())) {
-                statisticsFieldMap.get(field).setStdDeviation((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setStdDeviation((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.sum.toString())) {
-                statisticsFieldMap.get(field).setSum((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setSum((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.sumofsquares.toString())) {
-                statisticsFieldMap.get(field).setSum((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setSum((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.variance.toString())) {
-                statisticsFieldMap.get(field).setSum((Double) valueMap.get("value"));
+                statsFieldMap.get(field).setSum((Double) valueMap.get("value"));
             }
 
             if (type.equals(SeriesType.percentile.toString())) {
-                if (statisticsFieldMap.get(field).getPercentiles() == null) {
-                    statisticsFieldMap.get(field).setPercentiles(new ArrayList<>());
+                if (statsFieldMap.get(field).getPercentiles() == null) {
+                    statsFieldMap.get(field).setPercentiles(new ArrayList<>());
                 }
 
-                if (statisticsFieldMap.get(field).getPercentileRanks() == null) {
-                    statisticsFieldMap.get(field).setPercentileRanks(new ArrayList<>());
+                if (statsFieldMap.get(field).getPercentileRanks() == null) {
+                    statsFieldMap.get(field).setPercentileRanks(new ArrayList<>());
                 }
 
-                statisticsFieldMap.get(field).getPercentiles().add((Double) valueMap.get("value"));
-                statisticsFieldMap.get(field).getPercentileRanks().add(percentile);
+                statsFieldMap.get(field).getPercentiles().add((Double) valueMap.get("value"));
+                statsFieldMap.get(field).getPercentileRanks().add(percentile);
             }
         }
 
-        return new ArrayList<>(statisticsFieldMap.values());
+        return new ArrayList<>(statsFieldMap.values());
+    }
+
+    /**
+     * Terms.
+     * @param timerange Graylog time range object
+     * @param searchQuery Graylog search query
+     * @param seriesList Gralog series object list
+     * @param streamIds Graylog stream ID list
+     * @return Terms from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public void getTerms(
+        Timerange timerange,
+        String searchQuery,
+        List<Series> seriesList,
+        SortConfig sort,
+        List<String> streamIds
+    ) throws IOException {
+
+        SearchType searchType = SearchType.builder()
+            .name("chart")
+            .series(seriesList)
+            .rollup(true)
+            .rowGroups(List.of())
+            .columnGroups(List.of())
+            .sort(List.of(sort))
+            .type(SearchTypeType.pivot)
+            .build();
+
+        Query query = Query.builder()
+            .filter(convertToFilter(streamIds))
+            .query(SearchQuery.builder().queryString(searchQuery).build())
+            .timerange(timerange)
+            .searchType(searchType)
+            .build();
+
+        String body = syncSearch(SearchSpec.builder().query(query).build());
+
+        System.out.println(body);
     }
 
     /**
