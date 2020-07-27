@@ -111,6 +111,30 @@ public class GraylogSearch {
     }
 
     /**
+     * Histogram.
+     * @param streamIds Graylog stream ID list
+     * @param timerange Graylog time range object
+     * @param interval Graylog interval object
+     * @param searchQuery Graylog search query
+     * @param seriesList Gralog series object list
+     * @param columnGroups Graylog search type pivot object list
+     * @return Histogram from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public void getHistogram(
+        List<String> streamIds,
+        Timerange timerange,
+        Interval interval,
+        String searchQuery,
+        List<Series> seriesList,
+        List<SearchTypePivot> columnGroups
+    ) throws IOException {
+
+        search.getHistogram(timerange, interval, searchQuery, seriesList, columnGroups, streamIds);
+    }
+
+    /**
      * Raw search.
      * @param searchSpec Graylog search spec object
      * @return Response body from Graylog

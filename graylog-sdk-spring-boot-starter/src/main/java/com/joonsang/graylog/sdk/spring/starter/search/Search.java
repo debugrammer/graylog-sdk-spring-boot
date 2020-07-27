@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
+import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypePivotType;
 import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypeType;
 import com.joonsang.graylog.sdk.spring.starter.constant.SeriesType;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
@@ -208,6 +209,57 @@ public class Search {
         }
 
         return Terms.builder().terms(termsDataList).build();
+    }
+
+    /**
+     * Histogram.
+     * @param timerange Graylog time range object
+     * @param interval Graylog interval object
+     * @param searchQuery Graylog search query
+     * @param seriesList Gralog series object list
+     * @param columnGroups Graylog search type pivot object list
+     * @param streamIds Graylog stream ID list
+     * @return Histogram from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public void getHistogram(
+        Timerange timerange,
+        Interval interval,
+        String searchQuery,
+        List<Series> seriesList,
+        List<SearchTypePivot> columnGroups,
+        List<String> streamIds
+    ) throws IOException {
+
+        SearchType searchType = SearchType.builder()
+            .name("chart")
+            .series(seriesList)
+            .rollup(true)
+            .rowGroups(
+                List.of(
+                    SearchTypePivot.builder()
+                        .type(SearchTypePivotType.time)
+                        .field("timestamp")
+                        .interval(interval)
+                        .build()
+                )
+            )
+            .columnGroups(columnGroups)
+            .sort(List.of())
+            .type(SearchTypeType.pivot)
+            .build();
+
+        Query query = Query.builder()
+            .filter(convertToFilter(streamIds))
+            .query(SearchQuery.builder().queryString(searchQuery).build())
+            .timerange(timerange)
+            .searchType(searchType)
+            .build();
+
+        String body = syncSearch(SearchSpec.builder().query(query).build());
+
+        System.out.println(body);
     }
 
     /**

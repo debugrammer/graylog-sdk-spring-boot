@@ -96,6 +96,28 @@ public class GraylogSearchTests {
     }
 
     @Test
+    void histogram() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
+        Interval interval = Interval.builder()
+            .type(IntervalType.timeunit)
+            .timeunit(IntervalUnit.timeunit(IntervalUnit.Unit.minutes, 1))
+            .build();
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.count).build()
+        );
+        List<SearchTypePivot> columnGroups = List.of();
+
+        graylogSearch.getHistogram(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            interval,
+            "message:API_REQUEST_FINISHED",
+            seriesList,
+            columnGroups
+        );
+    }
+
+    @Test
     void raw() throws IOException {
         List<String> streamIds = List.of(GRAYLOG_STREAM_ID);
 
