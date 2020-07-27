@@ -1,5 +1,6 @@
 package com.joonsang.graylog.sdk.spring.starter.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,21 +17,20 @@ import java.util.List;
 @ToString
 public class Terms implements Serializable {
 
+    @Builder
+    public Terms(List<TermsData> terms) {
+        this.terms = terms;
+    }
+
     private List<TermsData> terms;
 
     @Builder
-    static class TermsData implements Serializable {
+    @ToString
+    public static class TermsData implements Serializable {
 
-        private final List<TermsLabel> labelMap;
+        private final List<String> labels;
 
-        private final Statistics statistics;
-
-        @Builder
-        static class TermsLabel implements Serializable {
-
-            private final String fieldName;
-
-            private final String fieldValue;
-        }
+        @JsonProperty("statistics_list")
+        private final List<Statistics> statisticsList;
     }
 }

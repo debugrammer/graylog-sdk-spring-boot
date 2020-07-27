@@ -137,6 +137,106 @@ public class Search {
         @SuppressWarnings("unchecked")
         List<Map<String, ?>> values = JsonPath.parse(body).read(searchResultPath, List.class);
 
+        return convertToStats(requestSeries, values);
+    }
+
+    /**
+     * Terms.
+     * @param timerange Graylog time range object
+     * @param searchQuery Graylog search query
+     * @param seriesList Gralog series object list
+     * @param rowGroups Graylog search type pivot object list
+     * @param sorts Graylog sort config object list
+     * @param streamIds Graylog stream ID list
+     * @return Terms from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public Terms getTerms(
+        Timerange timerange,
+        String searchQuery,
+        List<Series> seriesList,
+        List<SearchTypePivot> rowGroups,
+        List<SortConfig> sorts,
+        List<String> streamIds
+    ) throws IOException {
+
+        SearchType searchType = SearchType.builder()
+            .name("chart")
+            .series(seriesList)
+            .rollup(true)
+            .rowGroups(rowGroups)
+            .columnGroups(List.of())
+            .sort(sorts)
+            .type(SearchTypeType.pivot)
+            .build();
+
+        Query query = Query.builder()
+            .filter(convertToFilter(streamIds))
+            .query(SearchQuery.builder().queryString(searchQuery).build())
+            .timerange(timerange)
+            .searchType(searchType)
+            .build();
+
+        String body = syncSearch(SearchSpec.builder().query(query).build());
+
+        String searchQueryPath = "$.results." + query.getId() + ".query.search_types[0].series";
+        String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId() + ".rows";
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, ?>> requestSeries = JsonPath.parse(body).read(searchQueryPath, List.class);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, ?>> results = JsonPath.parse(body).read(searchResultPath, List.class);
+
+        List<Terms.TermsData> termsDataList = new ArrayList<>();
+
+        for (Map<String, ?> result : results) {
+            if (!result.get("source").equals("leaf")) {
+                continue;
+            }
+
+            @SuppressWarnings("unchecked")
+            List<String> labels = (List<String>) result.get("key");
+
+            @SuppressWarnings("unchecked")
+            List<Map<String, ?>> values = (List<Map<String, ?>>) result.get("values");
+
+            List<Statistics> statsList = convertToStats(requestSeries, values);
+
+            termsDataList.add(Terms.TermsData.builder().labels(labels).statisticsList(statsList).build());
+        }
+
+        return Terms.builder().terms(termsDataList).build();
+    }
+
+    /**
+     * Perform synchronous search.
+     * @param searchSpec Graylog search spec object
+     * @return Response body from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public String syncSearch(SearchSpec searchSpec) throws IOException {
+        String requestJson = objectMapper.writeValueAsString(searchSpec);
+        RequestBody jsonBody = RequestBody.create(requestJson, CONTENT_TYPE_JSON);
+
+        HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()
+            .addPathSegments("api/views/search/sync")
+            .addQueryParameter("timeout", String.valueOf(graylogApiProperties.getTimeout()))
+            .build();
+
+        return graylogRequest.httpPostRequest(httpUrl, jsonBody);
+    }
+
+    /**
+     * Convert Graylog response to Statistics object.
+     * @param requestSeries series requested to Graylog
+     * @param values values from Graylog
+     * @return Statistics object
+     * @since 2.0.0
+     */
+    private List<Statistics> convertToStats(List<Map<String, ?>> requestSeries, List<Map<String, ?>> values) {
         Map<String, Map<String, String>> keyMap = requestSeries.stream()
             .collect(
                 Collectors.toMap(
@@ -216,65 +316,6 @@ public class Search {
         }
 
         return new ArrayList<>(statsFieldMap.values());
-    }
-
-    /**
-     * Terms.
-     * @param timerange Graylog time range object
-     * @param searchQuery Graylog search query
-     * @param seriesList Gralog series object list
-     * @param streamIds Graylog stream ID list
-     * @return Terms from Graylog
-     * @throws IOException Graylog server failure
-     * @since 2.0.0
-     */
-    public void getTerms(
-        Timerange timerange,
-        String searchQuery,
-        List<Series> seriesList,
-        SortConfig sort,
-        List<String> streamIds
-    ) throws IOException {
-
-        SearchType searchType = SearchType.builder()
-            .name("chart")
-            .series(seriesList)
-            .rollup(true)
-            .rowGroups(List.of())
-            .columnGroups(List.of())
-            .sort(List.of(sort))
-            .type(SearchTypeType.pivot)
-            .build();
-
-        Query query = Query.builder()
-            .filter(convertToFilter(streamIds))
-            .query(SearchQuery.builder().queryString(searchQuery).build())
-            .timerange(timerange)
-            .searchType(searchType)
-            .build();
-
-        String body = syncSearch(SearchSpec.builder().query(query).build());
-
-        System.out.println(body);
-    }
-
-    /**
-     * Perform synchronous search.
-     * @param searchSpec Graylog search spec object
-     * @return Response body from Graylog
-     * @throws IOException Graylog server failure
-     * @since 2.0.0
-     */
-    public String syncSearch(SearchSpec searchSpec) throws IOException {
-        String requestJson = objectMapper.writeValueAsString(searchSpec);
-        RequestBody jsonBody = RequestBody.create(requestJson, CONTENT_TYPE_JSON);
-
-        HttpUrl httpUrl = graylogRequest.getHttpUrlBuilder()
-            .addPathSegments("api/views/search/sync")
-            .addQueryParameter("timeout", String.valueOf(graylogApiProperties.getTimeout()))
-            .build();
-
-        return graylogRequest.httpPostRequest(httpUrl, jsonBody);
     }
 
     /**

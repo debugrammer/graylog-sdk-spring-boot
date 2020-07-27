@@ -87,6 +87,30 @@ public class GraylogSearch {
     }
 
     /**
+     * Terms.
+     * @param streamIds Graylog stream ID list
+     * @param timerange Graylog time range object
+     * @param searchQuery Graylog search query
+     * @param seriesList Gralog series object list
+     * @param rowGroups Graylog search type pivot object list
+     * @param sorts Graylog sort config object list
+     * @return Terms from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public Terms getTerms(
+        List<String> streamIds,
+        Timerange timerange,
+        String searchQuery,
+        List<Series> seriesList,
+        List<SearchTypePivot> rowGroups,
+        List<SortConfig> sorts
+    ) throws IOException {
+
+        return search.getTerms(timerange, searchQuery, seriesList, rowGroups, sorts, streamIds);
+    }
+
+    /**
      * Raw search.
      * @param searchSpec Graylog search spec object
      * @return Response body from Graylog

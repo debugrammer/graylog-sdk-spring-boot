@@ -72,6 +72,30 @@ public class GraylogSearchTests {
     }
 
     @Test
+    void terms() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.avg).field("process_time").build()
+        );
+        List<SearchTypePivot> rowGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_id").limit(10).build(),
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(10).build()
+        );
+
+        Terms terms = graylogSearch.getTerms(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            "message:API_REQUEST_FINISHED",
+            seriesList,
+            rowGroups,
+            List.of()
+        );
+
+        System.out.println(terms.toString());
+    }
+
+    @Test
     void raw() throws IOException {
         List<String> streamIds = List.of(GRAYLOG_STREAM_ID);
 
