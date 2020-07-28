@@ -13,6 +13,7 @@ import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -249,7 +250,7 @@ public class Search {
      * @throws IOException Graylog server failure
      * @since 2.0.0
      */
-    public void getHistogram(
+    public Histogram getHistogram(
         Timerange timerange,
         Interval interval,
         String searchQuery,
@@ -285,7 +286,55 @@ public class Search {
 
         String body = syncSearch(SearchSpec.builder().query(query).build());
 
-        System.out.println(body);
+        String searchQueryPath = "$.results." + query.getId() + ".query.search_types[0].series";
+        String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId() + ".rows";
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, ?>> requestSeries = JsonPath.parse(body).read(searchQueryPath, List.class);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, ?>> results = JsonPath.parse(body).read(searchResultPath, List.class);
+
+        List<Histogram.HistogramData> histogramDataList = new ArrayList<>();
+
+        for (Map<String, ?> result : results) {
+            if (!result.get("source").equals("leaf")) {
+                continue;
+            }
+
+            @SuppressWarnings("unchecked")
+            List<String> labels = (List<String>) result.get("key");
+
+            @SuppressWarnings("unchecked")
+            List<Map<String, ?>> values = (List<Map<String, ?>>) result.get("values");
+
+            String timestamp = CollectionUtils.isEmpty(labels) ? "" : labels.get(0);
+
+            Map<String, Map<String, Value>> valueMap = convertToValueMap(requestSeries, values);
+
+            List<Statistics> statsList = valueMap.get("row-leaf").values().stream()
+                .map(Value::getStatistics)
+                .collect(Collectors.toList());
+
+            List<Value> addCol = valueMap.get("col-leaf").values().stream()
+                .map(
+                    value -> Value.builder()
+                        .labels(value.getLabels())
+                        .statistics(value.getStatistics())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+            histogramDataList.add(
+                Histogram.HistogramData.builder()
+                    .label(timestamp)
+                    .statisticsList(statsList)
+                    .additionalColumns(addCol)
+                    .build()
+            );
+        }
+
+        return Histogram.builder().histogram(histogramDataList).build();
     }
 
     /**

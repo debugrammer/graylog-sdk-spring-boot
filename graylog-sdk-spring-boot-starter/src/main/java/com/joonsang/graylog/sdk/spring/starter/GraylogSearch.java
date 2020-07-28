@@ -124,7 +124,7 @@ public class GraylogSearch {
      * @throws IOException Graylog server failure
      * @since 2.0.0
      */
-    public void getHistogram(
+    public Histogram getHistogram(
         List<String> streamIds,
         Timerange timerange,
         Interval interval,
@@ -133,7 +133,7 @@ public class GraylogSearch {
         List<SearchTypePivot> columnGroups
     ) throws IOException {
 
-        search.getHistogram(timerange, interval, searchQuery, seriesList, columnGroups, streamIds);
+        return search.getHistogram(timerange, interval, searchQuery, seriesList, columnGroups, streamIds);
     }
 
     /**

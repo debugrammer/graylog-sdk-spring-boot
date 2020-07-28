@@ -17,6 +17,11 @@ import java.util.List;
 @ToString
 public class Histogram implements Serializable {
 
+    @Builder
+    public Histogram(List<HistogramData> histogram) {
+        this.histogram = histogram;
+    }
+
     private List<HistogramData> histogram;
 
     @Builder
@@ -27,5 +32,8 @@ public class Histogram implements Serializable {
 
         @JsonProperty("statistics_list")
         private final List<Statistics> statisticsList;
+
+        @JsonProperty("additional_columns")
+        private final List<Value> additionalColumns;
     }
 }

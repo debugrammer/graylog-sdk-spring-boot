@@ -112,7 +112,7 @@ public class GraylogSearchTests {
         );
         List<SearchTypePivot> columnGroups = List.of();
 
-        graylogSearch.getHistogram(
+        Histogram histogram = graylogSearch.getHistogram(
             List.of(GRAYLOG_STREAM_ID),
             timerange,
             interval,
@@ -120,6 +120,8 @@ public class GraylogSearchTests {
             seriesList,
             columnGroups
         );
+
+        System.out.println(histogram.toString());
     }
 
     @Test
