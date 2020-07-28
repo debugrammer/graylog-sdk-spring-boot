@@ -5,14 +5,15 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Graylog SDK Properties
+ * Legacy Graylog SDK Properties
+ * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */
 @Getter
 @Setter
-@ConfigurationProperties("graylog.sdk")
-public class GraylogSdkProperties {
+@ConfigurationProperties("graylog.sdk.legacy")
+public class LegacyGraylogSdkProperties {
 
     private String timezone = "US/Eastern";
 }

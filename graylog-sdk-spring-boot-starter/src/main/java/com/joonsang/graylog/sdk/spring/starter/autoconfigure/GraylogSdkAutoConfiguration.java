@@ -30,22 +30,22 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableConfigurationProperties(
     {
-        GraylogSdkProperties.class,
+        LegacyGraylogSdkProperties.class,
         GraylogApiProperties.class
     }
 )
 public class GraylogSdkAutoConfiguration {
 
-    private final GraylogSdkProperties graylogSdkProperties;
+    private final LegacyGraylogSdkProperties legacyGraylogSdkProperties;
 
     private final GraylogApiProperties graylogApiProperties;
 
     public GraylogSdkAutoConfiguration(
-        GraylogSdkProperties graylogSdkProperties,
+        LegacyGraylogSdkProperties legacyGraylogSdkProperties,
         GraylogApiProperties graylogApiProperties
     ) {
 
-        this.graylogSdkProperties = graylogSdkProperties;
+        this.legacyGraylogSdkProperties = legacyGraylogSdkProperties;
         this.graylogApiProperties = graylogApiProperties;
     }
 
@@ -92,7 +92,7 @@ public class GraylogSdkAutoConfiguration {
     ) {
 
         GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
-        LegacySearchAbsolute absolute = new LegacySearchAbsolute(request, graylogSdkProperties);
+        LegacySearchAbsolute absolute = new LegacySearchAbsolute(request, legacyGraylogSdkProperties);
 
         return new LegacyGraylogSearch(objectMapper, absolute);
     }

@@ -3,7 +3,7 @@ package com.joonsang.graylog.sdk.spring.starter.search;
 import com.jayway.jsonpath.JsonPath;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.GraylogUtils;
-import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties;
+import com.joonsang.graylog.sdk.spring.starter.autoconfigure.LegacyGraylogSdkProperties;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import com.joonsang.graylog.sdk.spring.starter.domain.legacy.*;
 import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Histogram;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 /**
  * Legacy search with absolute time range.
+ * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */
@@ -26,15 +27,15 @@ public class LegacySearchAbsolute {
 
     private final GraylogRequest graylogRequest;
 
-    private final GraylogSdkProperties graylogSdkProperties;
+    private final LegacyGraylogSdkProperties legacyGraylogSdkProperties;
 
     public LegacySearchAbsolute(
         GraylogRequest graylogRequest,
-        GraylogSdkProperties graylogSdkProperties
+        LegacyGraylogSdkProperties legacyGraylogSdkProperties
     ) {
 
         this.graylogRequest = graylogRequest;
-        this.graylogSdkProperties = graylogSdkProperties;
+        this.legacyGraylogSdkProperties = legacyGraylogSdkProperties;
     }
 
     /**
@@ -171,7 +172,7 @@ public class LegacySearchAbsolute {
         for (Map.Entry<Long, Integer> entry : sortedResult.entrySet()) {
             HistogramData histogramData = new HistogramData(
                 GraylogUtils.convertTimestampToStringDate(
-                    graylogSdkProperties.getTimezone(),
+                    legacyGraylogSdkProperties.getTimezone(),
                     entry.getKey(),
                     interval
                 ),
@@ -232,7 +233,7 @@ public class LegacySearchAbsolute {
             FieldHistogramData fieldHistogramData = new FieldHistogramData();
             fieldHistogramData.setLabel(
                 GraylogUtils.convertTimestampToStringDate(
-                    graylogSdkProperties.getTimezone(),
+                    legacyGraylogSdkProperties.getTimezone(),
                     entry.getKey(),
                     interval
                 )

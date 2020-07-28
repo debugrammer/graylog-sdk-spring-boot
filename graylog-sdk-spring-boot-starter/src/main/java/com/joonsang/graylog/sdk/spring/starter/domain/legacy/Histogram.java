@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Legacy Histogram Domain
+ * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */
