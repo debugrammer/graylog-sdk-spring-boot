@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * Legacy Terms Data Domain
- * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */

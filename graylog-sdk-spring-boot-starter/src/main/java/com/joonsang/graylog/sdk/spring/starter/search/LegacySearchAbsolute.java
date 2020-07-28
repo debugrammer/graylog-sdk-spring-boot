@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 /**
  * Legacy search with absolute time range.
- * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */

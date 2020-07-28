@@ -10,7 +10,6 @@ import java.io.Serializable;
 
 /**
  * Legacy Field Histogram Data Domain
- * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */

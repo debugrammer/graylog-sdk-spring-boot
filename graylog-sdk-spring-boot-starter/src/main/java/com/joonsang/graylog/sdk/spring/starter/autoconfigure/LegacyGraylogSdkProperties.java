@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Legacy Graylog SDK Properties
- * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */
