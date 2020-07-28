@@ -3,15 +3,15 @@ package com.joonsang.graylog.sdk.spring.starter.constant;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Graylog Interval Units
+ * Graylog Interval Timeunit
  * @author debugrammer
  * @since 2.0.0
  */
-public class IntervalUnit {
+public class IntervalTimeunit {
 
     public enum Unit { seconds, minutes, hours, days, weeks, months }
 
-    public static String timeunit(Unit unit, Integer value) {
+    public static String get(Unit unit, Integer value) {
         return value.toString() + convertUnitToSymbol(unit);
     }
 

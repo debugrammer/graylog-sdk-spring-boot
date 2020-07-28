@@ -2,7 +2,7 @@ package com.joonsang.graylog.sdk.spring.starter.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.joonsang.graylog.sdk.spring.starter.constant.IntervalType;
-import com.joonsang.graylog.sdk.spring.starter.constant.IntervalUnit;
+import com.joonsang.graylog.sdk.spring.starter.constant.IntervalTimeunit;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,7 +31,7 @@ public class Interval {
 
     /**
      * Work with IntervalType.timeunit type of {@link Interval}
-     * @see IntervalUnit
+     * @see IntervalTimeunit
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String timeunit;

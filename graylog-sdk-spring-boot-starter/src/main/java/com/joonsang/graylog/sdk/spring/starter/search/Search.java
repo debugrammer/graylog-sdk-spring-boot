@@ -1,6 +1,7 @@
 package com.joonsang.graylog.sdk.spring.starter.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
@@ -138,7 +139,11 @@ public class Search {
         @SuppressWarnings("unchecked")
         List<Map<String, ?>> values = JsonPath.parse(body).read(searchResultPath, List.class);
 
-        return convertToStats(requestSeries, values);
+        Map<String, Value> converted = convertToValueMap(requestSeries, values).get("row-leaf");
+
+        return converted.values().stream()
+            .map(Value::getStatistics)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -147,6 +152,7 @@ public class Search {
      * @param searchQuery Graylog search query
      * @param seriesList Gralog series object list
      * @param rowGroups Graylog search type pivot object list
+     * @param columnGroups Graylog search type pivot object list
      * @param sorts Graylog sort config object list
      * @param streamIds Graylog stream ID list
      * @return Terms from Graylog
@@ -158,6 +164,7 @@ public class Search {
         String searchQuery,
         List<Series> seriesList,
         List<SearchTypePivot> rowGroups,
+        List<SearchTypePivot> columnGroups,
         List<SortConfig> sorts,
         List<String> streamIds
     ) throws IOException {
@@ -167,7 +174,7 @@ public class Search {
             .series(seriesList)
             .rollup(true)
             .rowGroups(rowGroups)
-            .columnGroups(List.of())
+            .columnGroups(columnGroups)
             .sort(sorts)
             .type(SearchTypeType.pivot)
             .build();
@@ -203,9 +210,28 @@ public class Search {
             @SuppressWarnings("unchecked")
             List<Map<String, ?>> values = (List<Map<String, ?>>) result.get("values");
 
-            List<Statistics> statsList = convertToStats(requestSeries, values);
+            Map<String, Map<String, Value>> valueMap = convertToValueMap(requestSeries, values);
 
-            termsDataList.add(Terms.TermsData.builder().labels(labels).statisticsList(statsList).build());
+            List<Statistics> statsList = valueMap.get("row-leaf").values().stream()
+                .map(Value::getStatistics)
+                .collect(Collectors.toList());
+
+            List<Value> addCol = valueMap.get("col-leaf").values().stream()
+                .map(
+                    value -> Value.builder()
+                        .labels(value.getLabels())
+                        .statistics(value.getStatistics())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+            termsDataList.add(
+                Terms.TermsData.builder()
+                    .labels(labels)
+                    .statisticsList(statsList)
+                    .additionalColumns(addCol)
+                    .build()
+            );
         }
 
         return Terms.builder().terms(termsDataList).build();
@@ -282,13 +308,17 @@ public class Search {
     }
 
     /**
-     * Convert Graylog response to Statistics object.
+     * Convert Graylog response to Value map.
      * @param requestSeries series requested to Graylog
      * @param values values from Graylog
-     * @return Statistics object
+     * @return Value map
      * @since 2.0.0
      */
-    private List<Statistics> convertToStats(List<Map<String, ?>> requestSeries, List<Map<String, ?>> values) {
+    private Map<String, Map<String, Value>> convertToValueMap(
+        List<Map<String, ?>> requestSeries,
+        List<Map<String, ?>> values
+    ) {
+
         Map<String, Map<String, String>> keyMap = requestSeries.stream()
             .collect(
                 Collectors.toMap(
@@ -301,73 +331,72 @@ public class Search {
                 )
             );
 
-        Map<String, Statistics> statsFieldMap = new HashMap<>();
+        Map<String, Map<String, Value>> leafFieldValueMap = ImmutableMap.of(
+            "row-leaf", new HashMap<>(),
+            "col-leaf", new HashMap<>()
+        );
 
         for (Map<String, ?> valueMap : values) {
             @SuppressWarnings("unchecked")
             List<String> keys = (List<String>) valueMap.get("key");
 
-            String id = keys.get(0);
+            String source = (String) valueMap.get("source");
+            List<String> columnLabels = new ArrayList<>();
+            String id = "";
+
+            for (String key : keys) {
+                if (keyMap.containsKey(key)) {
+                    id = key;
+                    continue;
+                }
+
+                columnLabels.add(key);
+            }
+
             String field = keyMap.get(id).get("field");
             String type = keyMap.get(id).get("type");
             String percentile = keyMap.get(id).get("percentile");
 
-            if (!statsFieldMap.containsKey(field)) {
-                statsFieldMap.put(field, new Statistics());
-                statsFieldMap.get(field).setField(field);
+            if (!leafFieldValueMap.get(source).containsKey(field)) {
+                leafFieldValueMap.get(source).put(field, new Value());
+                leafFieldValueMap.get(source).get(field).setLabels(columnLabels);
+                leafFieldValueMap.get(source).get(field).setStatistics(new Statistics());
+                leafFieldValueMap.get(source).get(field).getStatistics().setField(field);
             }
 
             if (type.equals(SeriesType.avg.toString())) {
-                statsFieldMap.get(field).setAverage((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.card.toString())) {
-                statsFieldMap.get(field).setCardinality((Integer) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.count.toString())) {
-                statsFieldMap.get(field).setCount((Integer) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.max.toString())) {
-                statsFieldMap.get(field).setMax((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.min.toString())) {
-                statsFieldMap.get(field).setMin((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.stddev.toString())) {
-                statsFieldMap.get(field).setStdDeviation((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.sum.toString())) {
-                statsFieldMap.get(field).setSum((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.sumofsquares.toString())) {
-                statsFieldMap.get(field).setSum((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.variance.toString())) {
-                statsFieldMap.get(field).setSum((Double) valueMap.get("value"));
-            }
-
-            if (type.equals(SeriesType.percentile.toString())) {
-                if (statsFieldMap.get(field).getPercentiles() == null) {
-                    statsFieldMap.get(field).setPercentiles(new ArrayList<>());
+                leafFieldValueMap.get(source).get(field).getStatistics().setAverage((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.card.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setCardinality((Integer) valueMap.get("value"));
+            } else if (type.equals(SeriesType.count.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setCount((Integer) valueMap.get("value"));
+            } else if (type.equals(SeriesType.max.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setMax((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.min.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setMin((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.stddev.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setStdDeviation((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.sum.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setSum((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.sumofsquares.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setSum((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.variance.toString())) {
+                leafFieldValueMap.get(source).get(field).getStatistics().setSum((Double) valueMap.get("value"));
+            } else if (type.equals(SeriesType.percentile.toString())) {
+                if (leafFieldValueMap.get(source).get(field).getStatistics().getPercentiles() == null) {
+                    leafFieldValueMap.get(source).get(field).getStatistics().setPercentiles(new ArrayList<>());
                 }
 
-                if (statsFieldMap.get(field).getPercentileRanks() == null) {
-                    statsFieldMap.get(field).setPercentileRanks(new ArrayList<>());
+                if (leafFieldValueMap.get(source).get(field).getStatistics().getPercentileRanks() == null) {
+                    leafFieldValueMap.get(source).get(field).getStatistics().setPercentileRanks(new ArrayList<>());
                 }
 
-                statsFieldMap.get(field).getPercentiles().add((Double) valueMap.get("value"));
-                statsFieldMap.get(field).getPercentileRanks().add(percentile);
+                leafFieldValueMap.get(source).get(field).getStatistics().getPercentiles().add((Double) valueMap.get("value"));
+                leafFieldValueMap.get(source).get(field).getStatistics().getPercentileRanks().add(percentile);
             }
         }
 
-        return new ArrayList<>(statsFieldMap.values());
+        return leafFieldValueMap;
     }
 
     /**

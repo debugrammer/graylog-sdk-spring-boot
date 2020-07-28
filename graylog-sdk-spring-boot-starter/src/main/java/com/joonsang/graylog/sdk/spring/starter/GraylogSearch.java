@@ -93,6 +93,7 @@ public class GraylogSearch {
      * @param searchQuery Graylog search query
      * @param seriesList Gralog series object list
      * @param rowGroups Graylog search type pivot object list
+     * @param columnGroups Graylog search type pivot object list
      * @param sorts Graylog sort config object list
      * @return Terms from Graylog
      * @throws IOException Graylog server failure
@@ -104,10 +105,11 @@ public class GraylogSearch {
         String searchQuery,
         List<Series> seriesList,
         List<SearchTypePivot> rowGroups,
+        List<SearchTypePivot> columnGroups,
         List<SortConfig> sorts
     ) throws IOException {
 
-        return search.getTerms(timerange, searchQuery, seriesList, rowGroups, sorts, streamIds);
+        return search.getTerms(timerange, searchQuery, seriesList, rowGroups, columnGroups, sorts, streamIds);
     }
 
     /**

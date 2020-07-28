@@ -82,6 +82,9 @@ public class GraylogSearchTests {
             SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_id").limit(10).build(),
             SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(10).build()
         );
+        List<SearchTypePivot> columnGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build()
+        );
 
         Terms terms = graylogSearch.getTerms(
             List.of(GRAYLOG_STREAM_ID),
@@ -89,6 +92,7 @@ public class GraylogSearchTests {
             "message:API_REQUEST_FINISHED",
             seriesList,
             rowGroups,
+            columnGroups,
             List.of()
         );
 
@@ -100,10 +104,11 @@ public class GraylogSearchTests {
         Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
         Interval interval = Interval.builder()
             .type(IntervalType.timeunit)
-            .timeunit(IntervalUnit.timeunit(IntervalUnit.Unit.minutes, 1))
+            .timeunit(IntervalTimeunit.get(IntervalTimeunit.Unit.minutes, 1))
             .build();
         List<Series> seriesList = List.of(
-            Series.builder().type(SeriesType.count).build()
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.avg).field("process_time").build()
         );
         List<SearchTypePivot> columnGroups = List.of();
 

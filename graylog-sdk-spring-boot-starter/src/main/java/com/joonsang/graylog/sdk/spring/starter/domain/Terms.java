@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Terms
@@ -32,5 +33,8 @@ public class Terms implements Serializable {
 
         @JsonProperty("statistics_list")
         private final List<Statistics> statisticsList;
+
+        @JsonProperty("additional_columns")
+        private final List<Value> additionalColumns;
     }
 }

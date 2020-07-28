@@ -1,5 +1,6 @@
 package com.joonsang.graylog.sdk.spring.starter.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Histogram implements Serializable {
 
         private final String label;
 
-        private final Integer data;
+        @JsonProperty("statistics_list")
+        private final List<Statistics> statisticsList;
     }
 }
