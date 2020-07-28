@@ -3,9 +3,11 @@ package com.joonsang.graylog.sdk.spring.starter.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
+import com.joonsang.graylog.sdk.spring.starter.LegacyGraylogSearch;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
-import com.joonsang.graylog.sdk.spring.starter.search.SearchAbsolute;
+import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
+import com.joonsang.graylog.sdk.spring.starter.search.LegacySearchAbsolute;
+import com.joonsang.graylog.sdk.spring.starter.search.Search;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,22 +30,22 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableConfigurationProperties(
     {
-        GraylogSdkProperties.class,
+        LegacyGraylogSdkProperties.class,
         GraylogApiProperties.class
     }
 )
 public class GraylogSdkAutoConfiguration {
 
-    private final GraylogSdkProperties graylogSdkProperties;
+    private final LegacyGraylogSdkProperties legacyGraylogSdkProperties;
 
     private final GraylogApiProperties graylogApiProperties;
 
     public GraylogSdkAutoConfiguration(
-        GraylogSdkProperties graylogSdkProperties,
+        LegacyGraylogSdkProperties legacyGraylogSdkProperties,
         GraylogApiProperties graylogApiProperties
     ) {
 
-        this.graylogSdkProperties = graylogSdkProperties;
+        this.legacyGraylogSdkProperties = legacyGraylogSdkProperties;
         this.graylogApiProperties = graylogApiProperties;
     }
 
@@ -69,6 +71,8 @@ public class GraylogSdkAutoConfiguration {
 
         builder.networkInterceptors().add(chain -> {
             Request request = chain.request().newBuilder()
+                .addHeader("X-Requested-By", "XMLHttpRequest")
+                .addHeader("X-Requested-With", "XMLHttpRequest")
                 .addHeader("Authorization", "Basic " + graylogApiProperties.getCredentials())
                 .addHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .build();
@@ -81,6 +85,20 @@ public class GraylogSdkAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = {"graylogObjectMapper", "graylogOkHttpClient"})
+    @ConditionalOnMissingBean(name = "legacyGraylogSearch")
+    public LegacyGraylogSearch legacyGraylogSearch(
+        @Qualifier("graylogObjectMapper") ObjectMapper objectMapper,
+        @Qualifier("graylogOkHttpClient") OkHttpClient okHttpClient
+    ) {
+
+        GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
+        LegacySearchAbsolute absolute = new LegacySearchAbsolute(request, legacyGraylogSdkProperties);
+
+        return new LegacyGraylogSearch(objectMapper, absolute);
+    }
+
+    @Bean
+    @ConditionalOnBean(name = {"graylogObjectMapper", "graylogOkHttpClient"})
     @ConditionalOnMissingBean(name = "graylogSearch")
     public GraylogSearch graylogSearch(
         @Qualifier("graylogObjectMapper") ObjectMapper objectMapper,
@@ -88,8 +106,8 @@ public class GraylogSdkAutoConfiguration {
     ) {
 
         GraylogRequest request = new GraylogRequest(okHttpClient, graylogApiProperties);
-        SearchAbsolute absolute = new SearchAbsolute(request, graylogSdkProperties);
+        Search search = new Search(request, graylogApiProperties, objectMapper);
 
-        return new GraylogSearch(objectMapper, absolute);
+        return new GraylogSearch(objectMapper, search);
     }
 }

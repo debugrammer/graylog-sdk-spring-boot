@@ -2,10 +2,7 @@ package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
 import com.joonsang.graylog.sdk.spring.starter.exception.GraylogServerException;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
@@ -43,6 +40,27 @@ public class GraylogRequest {
         Request request = new Request.Builder()
             .url(httpUrl)
             .get()
+            .build();
+
+        Response response = okHttpClient.newCall(request).execute();
+
+        validateResponse(response);
+
+        return Objects.requireNonNull(response.body()).string();
+    }
+
+    /**
+     * HTTP POST request.
+     * @param httpUrl OkHttp HttpUrl object
+     * @param requestBody OkHttp RequestBody object
+     * @return Response from Graylog
+     * @throws IOException Graylog server failure
+     * @since 2.0.0
+     */
+    public String httpPostRequest(HttpUrl httpUrl, RequestBody requestBody) throws IOException {
+        Request request = new Request.Builder()
+            .url(httpUrl)
+            .post(requestBody)
             .build();
 
         Response response = okHttpClient.newCall(request).execute();

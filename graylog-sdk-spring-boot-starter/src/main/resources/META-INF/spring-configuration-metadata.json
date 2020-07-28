@@ -1,9 +1,9 @@
 {
   "groups": [
     {
-      "name": "graylog.sdk",
-      "type": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties",
-      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties"
+      "name": "graylog.sdk.legacy",
+      "type": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.LegacyGraylogSdkProperties",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.LegacyGraylogSdkProperties"
     },
     {
       "name": "graylog.sdk.api",
@@ -13,9 +13,9 @@
   ],
   "properties": [
     {
-      "name": "graylog.sdk.timezone",
+      "name": "graylog.sdk.legacy.timezone",
       "type": "java.lang.String",
-      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkProperties",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.LegacyGraylogSdkProperties",
       "defaultValue": "US/Eastern",
       "description": "Graylog server timezone."
     },
@@ -46,6 +46,13 @@
       "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
       "defaultValue": "",
       "description": "Graylog REST API credentials."
+    },
+    {
+      "name": "graylog.sdk.api.timeout",
+      "type": "java.lang.Long",
+      "sourceType": "com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties",
+      "defaultValue": 60000,
+      "description": "Graylog REST API timeout."
     }
   ],
   "hints": []

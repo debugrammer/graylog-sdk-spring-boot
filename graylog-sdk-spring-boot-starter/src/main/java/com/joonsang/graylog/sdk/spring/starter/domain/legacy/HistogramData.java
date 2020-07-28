@@ -1,11 +1,12 @@
-package com.joonsang.graylog.sdk.spring.starter.domain;
+package com.joonsang.graylog.sdk.spring.starter.domain.legacy;
 
 import lombok.*;
 
 import java.io.Serializable;
 
 /**
- * Histogram Data Domain
+ * Legacy Histogram Data Domain
+ * (Graylog version < 3.2)
  * @author debugrammer
  * @since 1.0.0
  */
