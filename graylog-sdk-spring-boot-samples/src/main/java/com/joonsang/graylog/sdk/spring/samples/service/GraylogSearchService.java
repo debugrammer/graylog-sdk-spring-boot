@@ -3,11 +3,8 @@ package com.joonsang.graylog.sdk.spring.samples.service;
 import com.joonsang.graylog.GraylogQuery;
 import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
 import com.joonsang.graylog.sdk.spring.starter.GraylogSearch;
-import com.joonsang.graylog.sdk.spring.starter.constant.SortConfigOrder;
-import com.joonsang.graylog.sdk.spring.starter.constant.TimeRangeType;
-import com.joonsang.graylog.sdk.spring.starter.domain.Page;
-import com.joonsang.graylog.sdk.spring.starter.domain.SortConfig;
-import com.joonsang.graylog.sdk.spring.starter.domain.Timerange;
+import com.joonsang.graylog.sdk.spring.starter.constant.*;
+import com.joonsang.graylog.sdk.spring.starter.domain.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +50,58 @@ public class GraylogSearchService {
         );
 
         return messages;
+    }
+
+    public Terms getTerms(String from, String to, GraylogQuery query) throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.absolute).from(from).to(to).build();
+
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.avg).field("process_time").build()
+        );
+
+        List<SearchTypePivot> rowGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_id").limit(10).build(),
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(10).build()
+        );
+
+        List<SearchTypePivot> columnGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build()
+        );
+
+        return graylogSearch.getTerms(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            query.build(),
+            seriesList,
+            rowGroups,
+            columnGroups,
+            List.of()
+        );
+    }
+
+    public Histogram getHistogram(String from, String to, GraylogQuery query) throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.absolute).from(from).to(to).build();
+
+        Interval interval = Interval.builder()
+            .type(IntervalType.timeunit)
+            .timeunit(IntervalTimeunit.get(IntervalTimeunit.Unit.minutes, 1))
+            .build();
+
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.avg).field("process_time").build()
+        );
+
+        List<SearchTypePivot> columnGroups = List.of();
+
+        return graylogSearch.getHistogram(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            interval,
+            query.build(),
+            seriesList,
+            columnGroups
+        );
     }
 }

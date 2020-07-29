@@ -28,12 +28,13 @@ public class Histogram implements Serializable {
     @ToString
     public static class HistogramData implements Serializable {
 
-        private final String label;
+        @JsonProperty("base_label")
+        private final String baseLabel;
 
         @JsonProperty("statistics_list")
         private final List<Statistics> statisticsList;
 
-        @JsonProperty("additional_columns")
-        private final List<Value> additionalColumns;
+        @JsonProperty("stacked_columns")
+        private final List<Value> stackedColumns;
     }
 }

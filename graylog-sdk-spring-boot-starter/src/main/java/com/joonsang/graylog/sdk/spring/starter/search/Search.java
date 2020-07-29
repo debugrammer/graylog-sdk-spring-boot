@@ -228,9 +228,9 @@ public class Search {
 
             termsDataList.add(
                 Terms.TermsData.builder()
-                    .labels(labels)
+                    .baseLabels(labels)
                     .statisticsList(statsList)
-                    .additionalColumns(addCol)
+                    .stackedColumns(addCol)
                     .build()
             );
         }
@@ -327,9 +327,9 @@ public class Search {
 
             histogramDataList.add(
                 Histogram.HistogramData.builder()
-                    .label(timestamp)
+                    .baseLabel(timestamp)
                     .statisticsList(statsList)
-                    .additionalColumns(addCol)
+                    .stackedColumns(addCol)
                     .build()
             );
         }

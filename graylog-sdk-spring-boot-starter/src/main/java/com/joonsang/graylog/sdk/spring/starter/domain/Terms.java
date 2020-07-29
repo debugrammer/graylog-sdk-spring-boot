@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Terms
@@ -29,12 +28,13 @@ public class Terms implements Serializable {
     @ToString
     public static class TermsData implements Serializable {
 
-        private final List<String> labels;
+        @JsonProperty("base_labels")
+        private final List<String> baseLabels;
 
         @JsonProperty("statistics_list")
         private final List<Statistics> statisticsList;
 
-        @JsonProperty("additional_columns")
-        private final List<Value> additionalColumns;
+        @JsonProperty("stacked_columns")
+        private final List<Value> stackedColumns;
     }
 }
