@@ -83,7 +83,8 @@ public class GraylogSearchTests {
             SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(10).build()
         );
         List<SearchTypePivot> columnGroups = List.of(
-            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build()
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build(),
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("token_policy").limit(5).build()
         );
 
         Terms terms = graylogSearch.getTerms(

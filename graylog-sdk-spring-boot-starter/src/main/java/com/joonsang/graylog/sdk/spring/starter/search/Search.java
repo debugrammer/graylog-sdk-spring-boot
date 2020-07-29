@@ -386,10 +386,15 @@ public class Search {
         );
 
         for (Map<String, ?> valueMap : values) {
+            String source = (String) valueMap.get("source");
+
+            if (List.of("row-leaf", "col-leaf").stream().noneMatch(source::equals)) {
+                continue;
+            }
+
             @SuppressWarnings("unchecked")
             List<String> keys = (List<String>) valueMap.get("key");
 
-            String source = (String) valueMap.get("source");
             List<String> columnLabels = new ArrayList<>();
             String id = "";
 

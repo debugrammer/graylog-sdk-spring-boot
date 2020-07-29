@@ -66,7 +66,8 @@ public class GraylogSearchService {
         );
 
         List<SearchTypePivot> columnGroups = List.of(
-            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build()
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build(),
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("token_policy").limit(5).build()
         );
 
         return graylogSearch.getTerms(
@@ -93,7 +94,9 @@ public class GraylogSearchService {
             Series.builder().type(SeriesType.avg).field("process_time").build()
         );
 
-        List<SearchTypePivot> columnGroups = List.of();
+        List<SearchTypePivot> columnGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(5).build()
+        );
 
         return graylogSearch.getHistogram(
             List.of(GRAYLOG_STREAM_ID),
