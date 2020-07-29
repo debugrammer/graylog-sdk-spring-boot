@@ -1,22 +1,20 @@
 package com.joonsang.graylog.sdk.spring.samples.controller;
 
 import com.joonsang.graylog.GraylogQuery;
-import com.joonsang.graylog.sdk.spring.samples.domain.FieldHistograms;
 import com.joonsang.graylog.sdk.spring.samples.domain.GraylogMessage;
-import com.joonsang.graylog.sdk.spring.samples.domain.Histograms;
-import com.joonsang.graylog.sdk.spring.samples.domain.TwoStatistics;
 import com.joonsang.graylog.sdk.spring.samples.service.GraylogSearchService;
-import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Terms;
+import com.joonsang.graylog.sdk.spring.starter.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @RestController
-@RequestMapping({"/v1/search"})
+@RequestMapping({"/v2/search"})
 public class GraylogSearchController {
 
     private final GraylogSearchService graylogSearchService;
@@ -26,133 +24,24 @@ public class GraylogSearchController {
     }
 
     /**
-     * Message.
-     * Get message by API request ID.
+     * Messages.
+     * Get successful messages with paging.
      */
-    @GetMapping({"/messages/{requestId}"})
-    public ResponseEntity<?> getMessageByRequestId(
-        @PathVariable("requestId") String requestId
-    ) throws IOException, ReflectiveOperationException {
-
-        LocalDateTime fromDateTime = LocalDateTime.now().minusMonths(3);
-        LocalDateTime toDateTime = LocalDateTime.now();
-
-        GraylogMessage message = graylogSearchService.getMessage(
-            fromDateTime,
-            toDateTime,
-            GraylogQuery.builder()
-                .field("request_id", requestId)
-        );
-
-        if (message == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(message, HttpStatus.OK);
-    }
-
-    /**
-     * Statistics.
-     * Generates two statistics by sources' process times are between 0ms and 500ms.
-     * One has the stats from today to yesterday, the another has last 7 days stats.
-     */
-    @GetMapping({"/statistics/comparisons/period/sources"})
-    public ResponseEntity<?> getCompareSourceProcessTimeStats() throws IOException {
-        LocalDateTime firstDateTime = LocalDateTime.now().minusDays(1);
-        LocalDateTime secondDateTime = LocalDateTime.now().minusDays(7);
-
-        TwoStatistics twoStats = graylogSearchService.getTwoStats(
-            "source",
-            firstDateTime,
-            secondDateTime,
-            GraylogQuery.builder()
-                .field("message", "API_REQUEST_FINISHED")
-                .and().range("process_time", "[", 0, 500, "]")
-        );
-
-        return new ResponseEntity<>(twoStats, HttpStatus.OK);
-    }
-
-    /**
-     * Histogram.
-     * Generates multiple datetime histograms with labels by process time
-     */
-    @GetMapping({"/histograms/process-times"})
-    public ResponseEntity<?> getProcessTimeHistograms(
-        @RequestParam(value = "interval") String interval,
-        @RequestParam(value = "from") String from,
-        @RequestParam(value = "to") String to
+    @GetMapping({"/messages"})
+    public ResponseEntity<?> getSuccessfulMessages(
+        @RequestParam(value = "page_no", defaultValue = "1") int pageNo,
+        @RequestParam(value = "page_size", defaultValue = "10") int pageSize
     ) throws IOException {
 
-        LocalDateTime fromDateTime = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime toDateTime = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        Histograms histograms = graylogSearchService.getProcessTimeHistograms(
-            interval,
-            fromDateTime,
-            toDateTime,
+        Page<GraylogMessage> messages = graylogSearchService.getMessages(
+            "2020-07-28T09:00:00Z",
+            "2020-07-28T10:00:00Z",
             GraylogQuery.builder()
-                .field("message", "API_REQUEST_FINISHED")
+                .field("message", "API_REQUEST_FINISHED"),
+            pageSize,
+            pageNo
         );
 
-        return new ResponseEntity<>(histograms, HttpStatus.OK);
-    }
-
-    /**
-     * Field Histogram.
-     * Generates multiple field value histograms with labels by top requested sources' process times
-     */
-    @GetMapping({"/field-histograms/process-times/sources"})
-    public ResponseEntity<?> getSourceProcessTimeFieldHistograms(
-        @RequestParam(value = "size") int size,
-        @RequestParam(value = "interval") String interval,
-        @RequestParam(value = "from") String from,
-        @RequestParam(value = "to") String to
-    ) throws IOException {
-
-        LocalDateTime fromDateTime = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime toDateTime = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        FieldHistograms fieldHistograms = graylogSearchService.getProcessTimeFieldHistogramsByTopSources(
-            size,
-            interval,
-            fromDateTime,
-            toDateTime,
-            GraylogQuery.builder()
-                .field("message", "API_REQUEST_FINISHED")
-        );
-
-        return new ResponseEntity<>(fieldHistograms, HttpStatus.OK);
-    }
-
-    /**
-     * Terms.
-     * Get request path usage ranking
-     */
-    @GetMapping({"/terms/request-paths"})
-    public ResponseEntity<?> getRequestPathRanking(
-        @RequestParam(value = "size") int size,
-        @RequestParam(value = "from") String from,
-        @RequestParam(value = "to") String to,
-        @RequestParam(value = "top_values_only", defaultValue = "false") boolean topValuesOnly,
-        @RequestParam(value = "order", defaultValue = "desc") String order
-    ) throws IOException {
-
-        LocalDateTime fromDateTime = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime toDateTime = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        Terms terms = graylogSearchService.getUsageRanking(
-            "request_path",
-            "",
-            size,
-            fromDateTime,
-            toDateTime,
-            order.equals("asc"),
-            topValuesOnly,
-            GraylogQuery.builder()
-                .field("message", "API_REQUEST_FINISHED")
-        );
-
-        return new ResponseEntity<>(terms, HttpStatus.OK);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 }

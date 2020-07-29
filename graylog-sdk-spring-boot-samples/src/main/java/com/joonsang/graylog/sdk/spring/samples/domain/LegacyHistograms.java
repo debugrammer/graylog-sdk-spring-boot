@@ -9,10 +9,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Histograms {
+public class LegacyHistograms {
 
     @Builder
-    public Histograms(List<String> labels, List<Histogram> histograms) {
+    public LegacyHistograms(List<String> labels, List<Histogram> histograms) {
         this.labels = labels;
         this.histograms = histograms;
     }

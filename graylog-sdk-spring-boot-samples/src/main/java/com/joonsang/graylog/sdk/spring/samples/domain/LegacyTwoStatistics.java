@@ -7,10 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TwoStatistics {
+public class LegacyTwoStatistics {
 
     @Builder
-    public TwoStatistics(Statistics first, Statistics second) {
+    public LegacyTwoStatistics(Statistics first, Statistics second) {
         this.first = first;
         this.second = second;
     }

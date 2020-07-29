@@ -10,10 +10,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class FieldHistograms {
+public class LegacyFieldHistograms {
 
     @Builder
-    public FieldHistograms(List<String> labels, List<FieldHistogram> fieldHistograms) {
+    public LegacyFieldHistograms(List<String> labels, List<FieldHistogram> fieldHistograms) {
         this.labels = labels;
         this.fieldHistograms = fieldHistograms;
     }
