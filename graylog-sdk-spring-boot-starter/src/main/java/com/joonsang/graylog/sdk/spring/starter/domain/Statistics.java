@@ -18,6 +18,7 @@ import java.util.List;
 @ToString
 public class Statistics implements Serializable {
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String field;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
