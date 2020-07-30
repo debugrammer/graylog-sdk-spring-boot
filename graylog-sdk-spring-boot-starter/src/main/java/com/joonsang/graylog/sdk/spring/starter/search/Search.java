@@ -140,7 +140,7 @@ public class Search {
         @SuppressWarnings("unchecked")
         List<Map<String, ?>> values = JsonPath.parse(body).read(searchResultPath, List.class);
 
-        Map<String, Value> converted = convertToValueMap(requestSeries, values).get("row-leaf");
+        Map<String, Value> converted = convertToValueMap(requestSeries, values).get("row-leaf").get(StringUtils.EMPTY);
 
         return converted.values().stream()
             .map(Value::getStatistics)
@@ -211,26 +211,32 @@ public class Search {
             @SuppressWarnings("unchecked")
             List<Map<String, ?>> values = (List<Map<String, ?>>) result.get("values");
 
-            Map<String, Map<String, Value>> valueMap = convertToValueMap(requestSeries, values);
+            Map<String, Map<String, Map<String, Value>>> valueMap = convertToValueMap(requestSeries, values);
 
-            List<Statistics> statsList = valueMap.get("row-leaf").values().stream()
+            List<Statistics> statsList = valueMap.get("row-leaf").get(StringUtils.EMPTY).values().stream()
                 .map(Value::getStatistics)
                 .collect(Collectors.toList());
 
-            List<Value> addCol = valueMap.get("col-leaf").values().stream()
-                .map(
-                    value -> Value.builder()
-                        .labels(value.getLabels())
-                        .statistics(value.getStatistics())
+            List<Terms.StackedColumn> stackedColumns = new ArrayList<>();
+
+            for (Map<String, Value> colLeaf : valueMap.get("col-leaf").values()) {
+                stackedColumns.add(
+                    Terms.StackedColumn.builder()
+                        .columnLabels(colLeaf.get(colLeaf.keySet().iterator().next()).getLabels())
+                        .statisticsList(
+                            colLeaf.values().stream()
+                                .map(Value::getStatistics)
+                                .collect(Collectors.toList())
+                        )
                         .build()
-                )
-                .collect(Collectors.toList());
+                );
+            }
 
             termsDataList.add(
                 Terms.TermsData.builder()
                     .baseLabels(labels)
                     .statisticsList(statsList)
-                    .stackedColumns(addCol)
+                    .stackedColumns(stackedColumns)
                     .build()
             );
         }
@@ -308,28 +314,34 @@ public class Search {
             @SuppressWarnings("unchecked")
             List<Map<String, ?>> values = (List<Map<String, ?>>) result.get("values");
 
-            String timestamp = CollectionUtils.isEmpty(labels) ? "" : labels.get(0);
+            String timestamp = CollectionUtils.isEmpty(labels) ? StringUtils.EMPTY : labels.get(0);
 
-            Map<String, Map<String, Value>> valueMap = convertToValueMap(requestSeries, values);
+            Map<String, Map<String, Map<String, Value>>> valueMap = convertToValueMap(requestSeries, values);
 
-            List<Statistics> statsList = valueMap.get("row-leaf").values().stream()
+            List<Statistics> statsList = valueMap.get("row-leaf").get(StringUtils.EMPTY).values().stream()
                 .map(Value::getStatistics)
                 .collect(Collectors.toList());
 
-            List<Value> addCol = valueMap.get("col-leaf").values().stream()
-                .map(
-                    value -> Value.builder()
-                        .labels(value.getLabels())
-                        .statistics(value.getStatistics())
+            List<Histogram.StackedColumn> stackedColumns = new ArrayList<>();
+
+            for (Map<String, Value> colLeaf : valueMap.get("col-leaf").values()) {
+                stackedColumns.add(
+                    Histogram.StackedColumn.builder()
+                        .columnLabels(colLeaf.get(colLeaf.keySet().iterator().next()).getLabels())
+                        .statisticsList(
+                            colLeaf.values().stream()
+                                .map(Value::getStatistics)
+                                .collect(Collectors.toList())
+                        )
                         .build()
-                )
-                .collect(Collectors.toList());
+                );
+            }
 
             histogramDataList.add(
                 Histogram.HistogramData.builder()
                     .baseLabel(timestamp)
                     .statisticsList(statsList)
-                    .stackedColumns(addCol)
+                    .stackedColumns(stackedColumns)
                     .build()
             );
         }
@@ -363,7 +375,7 @@ public class Search {
      * @return Value map
      * @since 2.0.0
      */
-    private Map<String, Map<String, Value>> convertToValueMap(
+    private Map<String, Map<String, Map<String, Value>>> convertToValueMap(
         List<Map<String, ?>> requestSeries,
         List<Map<String, ?>> values
     ) {
@@ -380,7 +392,7 @@ public class Search {
                 )
             );
 
-        Map<String, Map<String, Value>> leafFieldValueMap = ImmutableMap.of(
+        Map<String, Map<String, Map<String, Value>>> leafFieldValueMap = ImmutableMap.of(
             "row-leaf", new HashMap<>(),
             "col-leaf", new HashMap<>()
         );
@@ -396,7 +408,8 @@ public class Search {
             List<String> keys = (List<String>) valueMap.get("key");
 
             List<String> columnLabels = new ArrayList<>();
-            String id = "";
+            StringBuilder keyName = new StringBuilder();
+            String id = StringUtils.EMPTY;
 
             for (String key : keys) {
                 if (keyMap.containsKey(key)) {
@@ -405,48 +418,55 @@ public class Search {
                 }
 
                 columnLabels.add(key);
+                keyName.append(key);
             }
 
             String field = keyMap.get(id).get("field");
             String type = keyMap.get(id).get("type");
             String percentile = keyMap.get(id).get("percentile");
 
-            if (!leafFieldValueMap.get(source).containsKey(field)) {
-                leafFieldValueMap.get(source).put(field, new Value());
-                leafFieldValueMap.get(source).get(field).setLabels(columnLabels);
-                leafFieldValueMap.get(source).get(field).setStatistics(new Statistics());
-                leafFieldValueMap.get(source).get(field).getStatistics().setField(field);
+            if (!leafFieldValueMap.get(source).containsKey(keyName.toString())) {
+                leafFieldValueMap.get(source).put(keyName.toString(), new HashMap<>());
             }
 
+            if (!leafFieldValueMap.get(source).get(keyName.toString()).containsKey(field)) {
+                leafFieldValueMap.get(source).get(keyName.toString()).put(field, new Value());
+                leafFieldValueMap.get(source).get(keyName.toString()).get(field).setLabels(columnLabels);
+                leafFieldValueMap.get(source).get(keyName.toString()).get(field).setStatistics(new Statistics());
+                leafFieldValueMap.get(source).get(keyName.toString()).get(field).getStatistics().setField(field);
+            }
+
+            Statistics statistics = leafFieldValueMap.get(source).get(keyName.toString()).get(field).getStatistics();
+
             if (type.equals(SeriesType.avg.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setAverage((Double) valueMap.get("value"));
+                statistics.setAverage((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.card.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setCardinality((Integer) valueMap.get("value"));
+                statistics.setCardinality((Integer) valueMap.get("value"));
             } else if (type.equals(SeriesType.count.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setCount((Integer) valueMap.get("value"));
+                statistics.setCount((Integer) valueMap.get("value"));
             } else if (type.equals(SeriesType.max.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setMax((Double) valueMap.get("value"));
+                statistics.setMax((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.min.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setMin((Double) valueMap.get("value"));
+                statistics.setMin((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.stddev.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setStdDeviation((Double) valueMap.get("value"));
+                statistics.setStdDeviation((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.sum.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setSum((Double) valueMap.get("value"));
+                statistics.setSum((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.sumofsquares.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setSum((Double) valueMap.get("value"));
+                statistics.setSum((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.variance.toString())) {
-                leafFieldValueMap.get(source).get(field).getStatistics().setSum((Double) valueMap.get("value"));
+                statistics.setSum((Double) valueMap.get("value"));
             } else if (type.equals(SeriesType.percentile.toString())) {
-                if (leafFieldValueMap.get(source).get(field).getStatistics().getPercentiles() == null) {
-                    leafFieldValueMap.get(source).get(field).getStatistics().setPercentiles(new ArrayList<>());
+                if (statistics.getPercentiles() == null) {
+                    statistics.setPercentiles(new ArrayList<>());
                 }
 
-                if (leafFieldValueMap.get(source).get(field).getStatistics().getPercentileRanks() == null) {
-                    leafFieldValueMap.get(source).get(field).getStatistics().setPercentileRanks(new ArrayList<>());
+                if (statistics.getPercentileRanks() == null) {
+                    statistics.setPercentileRanks(new ArrayList<>());
                 }
 
-                leafFieldValueMap.get(source).get(field).getStatistics().getPercentiles().add((Double) valueMap.get("value"));
-                leafFieldValueMap.get(source).get(field).getStatistics().getPercentileRanks().add(percentile);
+                statistics.getPercentiles().add((Double) valueMap.get("value"));
+                statistics.getPercentileRanks().add(percentile);
             }
         }
 

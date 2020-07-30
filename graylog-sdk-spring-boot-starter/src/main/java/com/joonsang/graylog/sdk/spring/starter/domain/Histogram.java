@@ -35,6 +35,17 @@ public class Histogram implements Serializable {
         private final List<Statistics> statisticsList;
 
         @JsonProperty("stacked_columns")
-        private final List<Value> stackedColumns;
+        private final List<StackedColumn> stackedColumns;
+    }
+
+    @Builder
+    @ToString
+    public static class StackedColumn implements Serializable {
+
+        @JsonProperty("column_labels")
+        private final List<String> columnLabels;
+
+        @JsonProperty("statistics_list")
+        private final List<Statistics> statisticsList;
     }
 }

@@ -53,7 +53,7 @@ public class GraylogSearchController {
     @GetMapping({"/terms"})
     public ResponseEntity<?> getTerms() throws IOException {
         Terms terms = graylogSearchService.getTerms(
-            "2020-07-28T09:00:00Z",
+            "2020-07-27T10:00:00Z",
             "2020-07-28T10:00:00Z",
             GraylogQuery.builder()
                 .field("message", "API_REQUEST_FINISHED")

@@ -2,7 +2,6 @@ package com.joonsang.graylog.sdk.spring.starter.domain;
 
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,14 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-public class Value implements Serializable {
-
-    @Builder
-    public Value(List<String> labels, Statistics statistics) {
-        this.labels = labels;
-        this.statistics = statistics;
-    }
+public class Value {
 
     private List<String> labels;
 
