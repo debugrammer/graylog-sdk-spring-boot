@@ -106,6 +106,139 @@ Page<YourMessageObject> messages = (Page<YourMessageObject>) graylogSearch.getMe
 );
 ```
 
+#### 1.2. Statistics
+Statistics for a query using a time range.
+```
+String from = "2020-07-30T00:00:00Z";
+String to = "2020-07-31T00:00:00Z";
+
+Timerange timerange = Timerange.builder()
+    .type(TimeRangeType.absolute)
+    .from(from)
+    .to(to)
+    .build();
+
+List<Series> seriesList = List.of(
+    Series.builder().type(SeriesType.avg).field("process_time").build(),
+    Series.builder().type(SeriesType.count).field("process_time").build(),
+    Series.builder().type(SeriesType.min).field("process_time").build(),
+    Series.builder().type(SeriesType.max).field("process_time").build(),
+    Series.builder().type(SeriesType.percentile).percentile(95.0f).field("process_time").build(),
+    Series.builder().type(SeriesType.percentile).percentile(99.0f).field("process_time").build(),
+    Series.builder().type(SeriesType.count).build()
+);
+
+List<Statistics> statistics = graylogSearch.getStatistics(
+    List.of("graylog_stream_id"),
+    timerange,
+    GraylogQuery.builder()
+        .field("message", "API_REQUEST_FINISHED"),
+    seriesList
+);
+```
+
+#### 1.3. Histogram
+Datetime histogram of a query using a time range.
+```
+String from = "2020-07-30T00:00:00Z";
+String to = "2020-07-31T00:00:00Z";
+
+Timerange timerange = Timerange.builder()
+    .type(TimeRangeType.absolute)
+    .from(from)
+    .to(to)
+    .build();
+
+Interval interval = Interval.builder()
+    .type(IntervalType.timeunit)
+    .timeunit(IntervalTimeunit.get(IntervalTimeunit.Unit.minutes, 1))
+    .build();
+
+List<Series> seriesList = List.of(
+    Series.builder().type(SeriesType.count).build(),
+    Series.builder().type(SeriesType.avg).field("process_time").build()
+);
+
+List<SearchTypePivot> columnGroups = List.of(
+    SearchTypePivot.builder().type(SearchTypePivotType.values).field("source").limit(5).build()
+);
+
+Histogram histogram = graylogSearch.getHistogram(
+    List.of("graylog_stream_id"),
+    timerange,
+    interval,
+    GraylogQuery.builder()
+        .field("message", "API_REQUEST_FINISHED"),
+    seriesList,
+    columnGroups
+);
+```
+
+#### 1.4. Raw
+Search with a search spec builder, returns raw response message from Graylog.
+```
+List<SearchFilter> filters = List.of(
+    SearchFilter.builder().id("graylog_stream_id").build()
+);
+
+SearchSpec searchSpec = SearchSpec.builder()
+    .query(
+        Query.builder()
+            .filter(Filter.builder().filters(filters).build())
+            .query(SearchQuery.builder().queryString("message:API_REQUEST_FINISHED").build())
+            .timerange(Timerange.builder().type(TimeRangeType.relative).range(300).build())
+            .searchType(
+                SearchType.builder()
+                    .name("chart")
+                    .series(List.of(Series.builder().type(SeriesType.count).build()))
+                    .rollup(true)
+                    .rowGroups(
+                        List.of(
+                            SearchTypePivot.builder()
+                                .type(SearchTypePivotType.values)
+                                .field("source")
+                                .limit(5)
+                                .build()
+                        )
+                    )
+                    .columnGroups(List.of())
+                    .sort(List.of())
+                    .type(SearchTypeType.pivot)
+                    .build()
+            )
+            .build()
+    )
+    .build();
+
+String result = graylogSearch.raw(searchSpec);
+```
+
+### Search Spec Builder
+
+### 1. Outline of Graylog 3.2 Search Spec
+> With a search spec builder, it will generate below IDs automatically if not specified
+* Each search has search ID which is made of [Object ID](https://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html).
+* Each query has query ID which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
+* Each search type has search type ID which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
+```
+SearchSpec.builder() /* search ID */
+    .query(
+        Query.builder() /* query ID */
+            .filter(... your filters ...)
+            .query(... your search query ...)
+            .timerange(... your timerange ...)
+            .searchType( /* search type ID */
+                ... your search type ...
+            )
+            .build()
+    )
+    .parameter(... your parameter if needed ...)
+    .build();
+```
+
+### 2. Detail of Graylog 3.2 Search Spec
+.
+
 ## 2. Legacy Graylog Search 
 > Legacy search APIs will no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
 
