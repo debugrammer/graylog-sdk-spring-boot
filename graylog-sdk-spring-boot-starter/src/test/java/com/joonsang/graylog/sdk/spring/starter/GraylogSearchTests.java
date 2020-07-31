@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(
     classes = {
         GraylogSdkAutoConfiguration.class
@@ -29,12 +31,12 @@ public class GraylogSearchTests {
     GraylogSearch graylogSearch;
 
     @Test
-    void pagedMessages() throws IOException {
+    void messages() throws IOException {
         Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
         SortConfig sort = SortConfig.builder().field("timestamp").order(SortConfigOrder.DESC).build();
 
         @SuppressWarnings("unchecked")
-        Page<TestMessage> pagedMessages = (Page<TestMessage>) graylogSearch.getMessages(
+        Page<TestMessage> messages = (Page<TestMessage>) graylogSearch.getMessages(
             List.of(GRAYLOG_STREAM_ID),
             timerange,
             "message:API_REQUEST_FINISHED",
@@ -44,7 +46,7 @@ public class GraylogSearchTests {
             TestMessage.class
         );
 
-        System.out.println(pagedMessages.toString());
+        assertThat(messages).isNotNull();
     }
 
     @Test
@@ -68,7 +70,7 @@ public class GraylogSearchTests {
             seriesList
         );
 
-        System.out.println(statistics.toString());
+        assertThat(statistics).isNotNull();
     }
 
     @Test
@@ -97,7 +99,8 @@ public class GraylogSearchTests {
             List.of()
         );
 
-        System.out.println(terms.toString());
+        assertThat(terms).isNotNull();
+
     }
 
     @Test
@@ -122,7 +125,7 @@ public class GraylogSearchTests {
             columnGroups
         );
 
-        System.out.println(histogram.toString());
+        assertThat(histogram).isNotNull();
     }
 
     @Test
@@ -162,6 +165,8 @@ public class GraylogSearchTests {
             )
             .build();
 
-        System.out.println(graylogSearch.raw(searchSpec));
+        String result = graylogSearch.raw(searchSpec);
+
+        assertThat(result).isNotNull();
     }
 }

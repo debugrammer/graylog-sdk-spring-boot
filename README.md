@@ -13,16 +13,17 @@ Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
 <dependency>
   <groupId>com.joonsang.graylog</groupId>
   <artifactId>graylog-sdk-spring-boot-starter</artifactId>
-  <version>1.2.0</version>
+  <version>2.0.0-beta.1</version>
 </dependency>
 ```
 
 **Gradle**
 ```
-implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '1.2.0'
+implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.0-beta.1'
 ```
 
-## Usage
+## 1. Graylog 3.2 Search
+### Usage
 Configure environment variables for Graylog SDK with `application.properties`:
 ```
 # Graylog API Settings
@@ -30,7 +31,6 @@ graylog.sdk.api.scheme=http
 graylog.sdk.api.host=localhost
 graylog.sdk.api.port=9000
 graylog.sdk.api.credentials=base64({graylog_access_token}:token)
-graylog.sdk.timezone=US/Eastern
 ```
 
 or `application.yml`:
@@ -43,7 +43,6 @@ graylog:
       host: localhost
       port: 9000
       credentials: base64({graylog_access_token}:token)
-    timezone: US/Eastern
 ```
 
 Then inject `GraylogSearch` bean in your project:
@@ -55,7 +54,96 @@ public YourClassName(GraylogSearch graylogSearch) {
 }
 ```
 
-## Request Graylog REST APIs
+### Request Graylog REST APIs
+
+### 1. Search
+
+#### 1.1. Messages
+Message search with time range.
+
+Create POJO class specifying your Graylog message fields.
+```
+public class YourMessageObject {
+
+    private String message;
+    
+    private String source;
+
+    private String timestamp;
+
+    // getters and setters
+}
+```
+
+Graylog SDK will return the list of message object as you specified.
+```
+String from = "2020-07-30T00:00:00Z";
+String to = "2020-07-31T00:00:00Z";
+
+Timerange timerange = Timerange.builder()
+    .type(TimeRangeType.absolute)
+    .from(from)
+    .to(to)
+    .build();
+
+SortConfig sort = SortConfig.builder()
+    .field("timestamp")
+    .order(SortConfigOrder.DESC)
+    .build();
+
+int pageSize = 20;
+int pageNo = 1;
+
+@SuppressWarnings("unchecked")
+Page<YourMessageObject> messages = (Page<YourMessageObject>) graylogSearch.getMessages(
+    List.of("graylog_stream_id"),
+    timerange,
+    "message:API_REQUEST_FINISHED",
+    pageSize,
+    pageNo,
+    sort,
+    YourMessageObject.class
+);
+```
+
+## 2. Legacy Graylog Search 
+> Legacy search APIs will no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
+
+### Usage
+Configure environment variables for Graylog SDK with `application.properties`:
+```
+# Graylog API Settings
+graylog.sdk.api.scheme=http
+graylog.sdk.api.host=localhost
+graylog.sdk.api.port=9000
+graylog.sdk.api.credentials=base64({graylog_access_token}:token)
+graylog.sdk.legacy.timezone=US/Eastern
+```
+
+or `application.yml`:
+```
+# Graylog API Settings
+graylog:
+  sdk:
+    api:
+      scheme: http
+      host: localhost
+      port: 9000
+      credentials: base64({graylog_access_token}:token)
+    legacy:
+      timezone: US/Eastern
+```
+
+Then inject `LegacyGraylogSearch` bean in your project:
+```
+private final LegacyGraylogSearch legacyGraylogSearch;
+
+public YourClassName(LegacyGraylogSearch legacyGraylogSearch) {
+    this.legacyGraylogSearch = legacyGraylogSearch;
+}
+```
+
+### Request Graylog REST APIs
 > Old APIs in `Search` section were moved to `Legacy/Search` section from [Graylog 3.2](https://www.graylog.org/post/announcing-graylog-3-2)
 
 Currently, only `Legacy/Search/Absolute` APIs are supported.
@@ -85,7 +173,7 @@ LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatte
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 @SuppressWarnings("unchecked")
-List<YourMessageObject> messages = (List<YourMessageObject>) graylogSearch.getMessages(
+List<YourMessageObject> messages = (List<YourMessageObject>) legacyGraylogSearch.getMessages(
     "graylog_stream_id",
     from,
     to,
@@ -102,7 +190,7 @@ int pageSize = 20;
 int pageNo = 1;
 
 @SuppressWarnings("unchecked")
-Page<YourMessageObject> pagedMessages = (Page<YourMessageObject>) graylogSearch.getMessages(
+Page<YourMessageObject> pagedMessages = (Page<YourMessageObject>) legacyGraylogSearch.getMessages(
     "graylog_stream_id",
     from,
     to,
@@ -119,7 +207,7 @@ Field statistics for a query using an absolute time range.
 LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-Statistics statistics = graylogSearch.getStatistics(
+Statistics statistics = legacyGraylogSearch.getStatistics(
     "graylog_stream_id",
     "field_name",
     from,
@@ -134,7 +222,7 @@ Datetime histogram of a query using an absolute time range.
 LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-Histogram histogram = graylogSearch.getHistogram(
+Histogram histogram = legacyGraylogSearch.getHistogram(
     "graylog_stream_id",
     TimeUnit.HOUR,
     from,
@@ -149,7 +237,7 @@ Field value histogram of a query using an absolute time range.
 LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-FieldHistogram fieldHistogram = graylogSearch.getFieldHistogram(
+FieldHistogram fieldHistogram = legacyGraylogSearch.getFieldHistogram(
     "graylog_stream_id",
     "field_name",
     TimeUnit.HOUR,
@@ -165,7 +253,7 @@ Most common field terms of a query using an absolute time range.
 LocalDateTime from = LocalDateTime.parse("2019-11-04 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 LocalDateTime to = LocalDateTime.parse("2019-11-05 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-Terms terms = graylogSearch.getTerms(
+Terms terms = legacyGraylogSearch.getTerms(
     "graylog_stream_id",
     "field_name",
     "field_name_to_stack",
@@ -181,3 +269,6 @@ Terms terms = graylogSearch.getTerms(
 ## Code Examples
 * [graylog-sdk-spring-boot-samples](https://github.com/debugrammer/graylog-sdk-spring-boot/tree/master/graylog-sdk-spring-boot-samples) in this repository contains the project that show you sample API implementations using Graylog SDK with Spring Boot.
     * Check out [Graylog Query Builder](https://github.com/debugrammer/graylog-query-builder) if you are looking for query builder for Graylog search query.
+
+## Migration Guide From 1.2.x
+You'll find a step by step guide to upgrade from 1.2.x to 2.x here.
