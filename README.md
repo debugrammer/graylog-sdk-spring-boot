@@ -377,7 +377,7 @@ SearchType.builder()
 ```
 
 #### 2.6.1. Series
-Equivalent to `metrics` on Graylog widget aggregation UI.
+Equivalent to `METRICS` on Graylog widget aggregation UI.
 
 count():
 ```
@@ -404,7 +404,7 @@ Series.builder()
 ```
 
 #### 2.6.2. Row Groups
-Equivalent to `rows` on Graylog widget aggregation UI.
+Equivalent to `ROWS` on Graylog widget aggregation UI.
 ```
 SearchTypePivot.builder()
     .type(SearchTypePivotType.values) /* values or time */
@@ -414,7 +414,7 @@ SearchTypePivot.builder()
 ```
 
 #### 2.6.3. Column Groups
-Equivalent to `columns` on Graylog widget aggregation UI.
+Equivalent to `COLUMNS` on Graylog widget aggregation UI.
 ```
 SearchTypePivot.builder()
     .type(SearchTypePivotType.values) /* values or time */
@@ -424,7 +424,7 @@ SearchTypePivot.builder()
 ```
 
 #### 2.6.4. Sort
-Equivalent to `sorting` and `direction` on Graylog widget aggregation UI.
+Equivalent to `SORTING` and `DIRECTION` on Graylog widget aggregation UI.
 
 message sort:
 ```
