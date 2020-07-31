@@ -53,6 +53,7 @@ public class Statistics implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Double> percentiles;
 
+    @JsonProperty("percentile_ranks")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> percentileRanks;
 }
