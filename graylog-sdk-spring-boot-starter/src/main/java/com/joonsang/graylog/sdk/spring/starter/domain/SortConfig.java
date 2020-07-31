@@ -23,7 +23,7 @@ public class SortConfig {
     private final SortConfigType type;
 
     /**
-     * Work with SearchTypeType.pivot type of {@link SearchType}
+     * Work with SearchTypeType.pivot/SearchTypeType.messages types of {@link SearchType}
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final SortConfigDirection direction;

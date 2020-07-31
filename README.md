@@ -239,6 +239,10 @@ SearchSpec.builder() /* search ID */
 ### 2. Search Specifications
 
 #### 2.1. Search Spec
+![Graylog Search UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_search_ui.jpg)
+
+Data implementation of Graylog search UI as above.
+
 Search spec contains search ID, queries, and parameters.
 
 Generate search spec with specific search ID:
@@ -275,7 +279,7 @@ Query.builder()
 ```
 
 #### 2.3. Filter
-Graylog search filter.
+Graylog search filter. Equivalent to `stream select` on Graylog search UI.
 ```
 Filter.builder()
     .filters(
@@ -289,7 +293,7 @@ Filter.builder()
 ```
 
 #### 2.4. Timerange
-Time range of search.
+Time range of search. Equivalent to `time range select` on Graylog search UI.
 
 Relative time range:
 ```
@@ -318,7 +322,7 @@ Timerange timerange = Timerange.builder()
 ```
 
 #### 2.5. Search Query
-Graylog search query.
+Graylog search query. Equivalent to `search query text field` on Graylog search UI.
 ```
 SearchQuery.builder()
     .queryString("your graylog search query")
@@ -328,7 +332,7 @@ SearchQuery.builder()
 #### 2.6. Search Type
 ![Graylog Widget Aggregation UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_widget_aggregation_ui.jpg)
 
-Data implementation of Graylog widget aggregation UI.
+Data implementation of Graylog widget aggregation UI as above.
 ```
 SearchType.builder()
     .name("chart") /* name of search type */
@@ -357,6 +361,70 @@ SearchType.builder()
 
 #### 2.6.1. Series
 Equivalent to `metrics` on Graylog widget aggregation UI.
+
+count():
+```
+Series.builder()
+    .type(SeriesType.count)
+    .build();
+```
+
+avg(field_name):
+```
+Series.builder()
+    .type(SeriesType.avg)
+    .field("field_name")
+    .build();
+```
+
+percentile(field_name, 95):
+```
+Series.builder()
+    .type(SeriesType.percentile)
+    .percentile(95.0f)
+    .field("field_name")
+    .build();
+```
+
+#### 2.6.2. Row Groups
+Equivalent to `rows` on Graylog widget aggregation UI.
+```
+SearchTypePivot.builder()
+    .type(SearchTypePivotType.values) /* values or time */
+    .field("source")
+    .limit(15)
+    .build()
+```
+
+#### 2.6.3. Column Groups
+Equivalent to `columns` on Graylog widget aggregation UI.
+```
+SearchTypePivot.builder()
+    .type(SearchTypePivotType.values) /* values or time */
+    .field("source")
+    .limit(15)
+    .build()
+```
+
+#### 2.6.4. Sort
+Equivalent to `sorting` and `direction` on Graylog widget aggregation UI.
+
+message sort:
+```
+SortConfig.builder()
+    .field("timestamp")
+    .order(SortConfigOrder.DESC)
+    .build();
+```
+
+pivot sort:
+```
+SortConfig.builder()
+    .type(SortConfigType.series)
+    .field("count()")
+    .order(SortConfigDirection.Descending)
+    .build();
+```
 
 ## 2. Legacy Graylog Search 
 > Legacy search APIs will no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
