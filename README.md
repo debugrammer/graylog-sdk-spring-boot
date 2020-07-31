@@ -213,10 +213,10 @@ SearchSpec searchSpec = SearchSpec.builder()
 String result = graylogSearch.raw(searchSpec);
 ```
 
-### Search Spec Builder
+### Graylog 3.2 Search Spec Builder
 
-### 1. Outline of Graylog 3.2 Search Spec
-> With a search spec builder, it will generate below IDs automatically if not specified
+### 1. Outline of Search Spec
+> With a search spec builder, it will generate required IDs automatically if not specified
 * Each search has search ID which is made of [Object ID](https://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html).
 * Each query has query ID which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
 * Each search type has search type ID which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
@@ -236,7 +236,124 @@ SearchSpec.builder() /* search ID */
     .build();
 ```
 
-### 2. Detail of Graylog 3.2 Search Spec
+### 2. Search Specifications
+
+#### 2.1. Search Spec
+Search spec contains search ID, queries, and parameters.
+
+Generate search spec with specific search ID:
+```
+SearchSpec.builder()
+    .id("your Object ID")
+    ...
+    .build();
+```
+
+Generate search spec with new search ID:
+```
+SearchSpec.builder()
+    ...
+    .build();
+```
+
+#### 2.2. Query
+Query contains query ID, filter, search query, timerange, and search types.
+
+Generate query with specific query ID:
+```
+Query.builder()
+    .id("your UUID")
+    ...
+    .build();
+```
+
+Generate query with new query ID:
+```
+Query.builder()
+    ...
+    .build();
+```
+
+#### 2.3. Filter
+Graylog search filter.
+```
+Filter.builder()
+    .filters(
+        List.of(
+            SearchFilter.builder()
+                .id("your graylog stream id")
+                .build()
+        )
+    )
+    .build();
+```
+
+#### 2.4. Timerange
+Time range of search.
+
+Relative time range:
+```
+Timerange.builder()
+    .type(TimeRangeType.relative)
+    .range(300)
+    .build();
+```
+
+Absolute time range:
+> Requires [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format
+```
+Timerange timerange = Timerange.builder()
+    .type(TimeRangeType.absolute)
+    .from("2020-07-30T00:00:00Z")
+    .to("2020-07-31T00:00:00Z")
+    .build();
+```
+
+Keyword time range:
+```
+Timerange timerange = Timerange.builder()
+    .type(TimeRangeType.keyword)
+    .keyword("Last five minutes")
+    .build();
+```
+
+#### 2.5. Search Query
+Graylog search query.
+```
+SearchQuery.builder()
+    .queryString("your graylog search query")
+    .build();
+```
+
+#### 2.6. Search Type
+Graylog search type.
+```
+SearchType.builder()
+    .name("chart") /* name of search type */
+    .series( /* metrics */
+        List.of(
+            Series.builder()
+                .type(SeriesType.count)
+                .build()
+        )
+    )
+    .rollup(true)
+    .rowGroups( /* rows */
+        List.of(
+            SearchTypePivot.builder()
+                .type(SearchTypePivotType.values)
+                .field("source")
+                .limit(15)
+                .build()
+        )
+    )
+    .columnGroups(List.of()) /* columns */
+    .sort(List.of()) /* sorting */
+    .type(SearchTypeType.pivot) /* pivot or messages */
+    .build()
+```
+
+#### 2.6.1. Series
 .
 
 ## 2. Legacy Graylog Search 
