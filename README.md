@@ -271,4 +271,4 @@ Terms terms = legacyGraylogSearch.getTerms(
     * Check out [Graylog Query Builder](https://github.com/debugrammer/graylog-query-builder) if you are looking for query builder for Graylog search query.
 
 ## Migration Guide From 1.2.x
-You'll find a step by step guide to upgrade from 1.2.x to 2.x here.
+You'll find a guide to upgrade from 1.2.x to 2.x [here](https://github.com/debugrammer/graylog-sdk-spring-boot/releases/tag/2.0.0-beta.0).
