@@ -326,7 +326,9 @@ SearchQuery.builder()
 ```
 
 #### 2.6. Search Type
-Graylog search type.
+![Graylog Widget Aggregation UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_widget_aggregation_ui.jpg)
+
+Data implementation of Graylog widget aggregation UI.
 ```
 SearchType.builder()
     .name("chart") /* name of search type */
@@ -354,7 +356,7 @@ SearchType.builder()
 ```
 
 #### 2.6.1. Series
-.
+Equivalent to `metrics` on Graylog widget aggregation UI.
 
 ## 2. Legacy Graylog Search 
 > Legacy search APIs will no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
