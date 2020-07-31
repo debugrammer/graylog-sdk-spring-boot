@@ -248,7 +248,7 @@ Search spec contains search ID, queries, and parameters.
 Generate search spec with specific search ID:
 ```
 SearchSpec.builder()
-    .id("your Object ID")
+    .id("your object id")
     ...
     .build();
 ```
@@ -266,7 +266,7 @@ Query contains query ID, filter, search query, timerange, and search types.
 Generate query with specific query ID:
 ```
 Query.builder()
-    .id("your UUID")
+    .id("your uuid")
     ...
     .build();
 ```
@@ -333,6 +333,23 @@ SearchQuery.builder()
 ![Graylog Widget Aggregation UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_widget_aggregation_ui.jpg)
 
 Data implementation of Graylog widget aggregation UI as above.
+
+Generate query with specific search type ID:
+```
+SearchType.builder()
+    .id("your uuid")
+    ...
+    .build();
+```
+
+Generate query with new search type ID:
+```
+SearchType.builder()
+    ...
+    .build();
+```
+
+Full sample:
 ```
 SearchType.builder()
     .name("chart") /* name of search type */
