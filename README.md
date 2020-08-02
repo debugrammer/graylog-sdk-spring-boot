@@ -281,7 +281,7 @@ Query.builder()
 ```
 
 #### 2.3. Filter
-Graylog search filter. Equivalent to `stream select` on Graylog search UI.
+Graylog search filter. Equivalent to `stream select` on [Graylog search UI](#21-search-spec).
 ```
 Filter.builder()
     .filters(
@@ -295,7 +295,7 @@ Filter.builder()
 ```
 
 #### 2.4. Timerange
-Time range of search. Equivalent to `time range select` on Graylog search UI.
+Time range of search. Equivalent to `time range select` on [Graylog search UI](#21-search-spec).
 
 Relative time range:
 ```
@@ -324,7 +324,7 @@ Timerange timerange = Timerange.builder()
 ```
 
 #### 2.5. Search Query
-Graylog search query. Equivalent to `search query text field` on Graylog search UI.
+Graylog search query. Equivalent to `search query text field` on [Graylog search UI](#21-search-spec).
 ```
 SearchQuery.builder()
     .queryString("your graylog search query")
@@ -379,7 +379,7 @@ SearchType.builder()
 ```
 
 #### 2.6.1. Series
-Equivalent to `METRICS` on Graylog widget aggregation UI.
+Equivalent to `METRICS` on [Graylog widget aggregation UI](#26-search-type).
 
 count():
 ```
@@ -406,7 +406,7 @@ Series.builder()
 ```
 
 #### 2.6.2. Row Groups
-Equivalent to `ROWS` on Graylog widget aggregation UI.
+Equivalent to `ROWS` on [Graylog widget aggregation UI](#26-search-type).
 ```
 SearchTypePivot.builder()
     .type(SearchTypePivotType.values) /* values or time */
@@ -416,7 +416,7 @@ SearchTypePivot.builder()
 ```
 
 #### 2.6.3. Column Groups
-Equivalent to `COLUMNS` on Graylog widget aggregation UI.
+Equivalent to `COLUMNS` on [Graylog widget aggregation UI](#26-search-type).
 ```
 SearchTypePivot.builder()
     .type(SearchTypePivotType.values) /* values or time */
@@ -426,7 +426,7 @@ SearchTypePivot.builder()
 ```
 
 #### 2.6.4. Sort
-Equivalent to `SORTING` and `DIRECTION` on Graylog widget aggregation UI.
+Equivalent to `SORTING` and `DIRECTION` on [Graylog widget aggregation UI](#26-search-type).
 
 message sort:
 ```
