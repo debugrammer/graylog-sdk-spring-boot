@@ -241,9 +241,9 @@ SearchSpec.builder() /* search ID */
 ### 2. Search Specifications
 
 #### 2.1. Search Spec
-![Graylog Search UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_search_ui.jpg)
+> Data implementation of Graylog search UI as below.
 
-Data implementation of Graylog search UI as above.
+![Graylog Search UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_search_ui.jpg)
 
 Search spec contains search ID, queries, and parameters.
 
@@ -332,9 +332,9 @@ SearchQuery.builder()
 ```
 
 #### 2.6. Search Type
-![Graylog Widget Aggregation UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_widget_aggregation_ui.jpg)
+> Data implementation of Graylog widget aggregation UI as below.
 
-Data implementation of Graylog widget aggregation UI as above.
+![Graylog Widget Aggregation UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_widget_aggregation_ui.jpg)
 
 Generate query with specific search type ID:
 ```
