@@ -226,7 +226,7 @@ String result = graylogSearch.raw(searchSpec);
 SearchSpec.builder() /* search ID */
     .query(
         Query.builder() /* query ID */
-            .filter(... your filters ...)
+            .filter(... your filter ...)
             .query(... your search query ...)
             .timerange(... your timerange ...)
             .searchType( /* search type ID */
