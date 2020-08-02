@@ -263,7 +263,7 @@ SearchSpec.builder()
 ```
 
 #### 2.2. Query
-Query contains query ID, filter, search query, timerange, and search types.
+Query contains query ID, filter, search query, time range, and search types.
 
 Generate query with specific query ID:
 ```
