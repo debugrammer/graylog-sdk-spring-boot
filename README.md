@@ -31,6 +31,7 @@ graylog.sdk.api.scheme=http
 graylog.sdk.api.host=localhost
 graylog.sdk.api.port=9000
 graylog.sdk.api.credentials=base64({graylog_access_token}:token)
+graylog.sdk.api.timeout=60000
 ```
 
 or `application.yml`:
@@ -43,6 +44,7 @@ graylog:
       host: localhost
       port: 9000
       credentials: base64({graylog_access_token}:token)
+      timeout: 60000
 ```
 
 Then inject `GraylogSearch` bean in your project:
