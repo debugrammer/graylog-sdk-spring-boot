@@ -197,7 +197,7 @@ List<Series> seriesList = List.of(
 
 List<SearchTypePivot> rowGroups = List.of(
     SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name_1").limit(10).build(),
-    SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name_2").limit(10).build()
+    SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name_2").build()
 );
 
 List<SearchTypePivot> columnGroups = List.of(

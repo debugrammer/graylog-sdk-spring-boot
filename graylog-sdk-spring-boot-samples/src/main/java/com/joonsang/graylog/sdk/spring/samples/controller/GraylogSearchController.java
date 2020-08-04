@@ -98,7 +98,7 @@ public class GraylogSearchController {
 
         List<SearchTypePivot> rowGroups = List.of(
             SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_id").limit(10).build(),
-            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(10).build()
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").build()
         );
 
         List<SearchTypePivot> columnGroups = List.of(
