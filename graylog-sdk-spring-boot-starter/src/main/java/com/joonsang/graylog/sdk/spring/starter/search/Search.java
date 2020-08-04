@@ -70,7 +70,7 @@ public class Search {
             .name("messages")
             .limit(limit)
             .offset(offset)
-            .sort(List.of(sort))
+            .sort(sort == null ? List.of() : List.of(sort))
             .type(SearchTypeType.messages)
             .build();
 
@@ -154,7 +154,7 @@ public class Search {
      * @param seriesList Gralog series object list
      * @param rowGroups Graylog search type pivot object list
      * @param columnGroups Graylog search type pivot object list
-     * @param sorts Graylog sort config object list
+     * @param sort Graylog sort config object
      * @param streamIds Graylog stream ID list
      * @return Terms from Graylog
      * @throws IOException Graylog server failure
@@ -166,7 +166,7 @@ public class Search {
         List<Series> seriesList,
         List<SearchTypePivot> rowGroups,
         List<SearchTypePivot> columnGroups,
-        List<SortConfig> sorts,
+        SortConfig sort,
         List<String> streamIds
     ) throws IOException {
 
@@ -176,7 +176,7 @@ public class Search {
             .rollup(true)
             .rowGroups(rowGroups)
             .columnGroups(columnGroups)
-            .sort(sorts)
+            .sort(sort == null ? List.of() : List.of(sort))
             .type(SearchTypeType.pivot)
             .build();
 

@@ -105,13 +105,20 @@ public class GraylogSearchController {
             SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build()
         );
 
+        SortConfig sort = SortConfig.builder()
+            .type(SortConfigType.series)
+            .field("count()")
+            .direction(SortConfigDirection.Descending)
+            .build();
+
         Terms terms = graylogSearchService.getTerms(
             timerange,
             GraylogQuery.builder()
                 .field("message", "API_REQUEST_FINISHED"),
             seriesList,
             rowGroups,
-            columnGroups
+            columnGroups,
+            sort
         );
 
         return new ResponseEntity<>(terms, HttpStatus.OK);

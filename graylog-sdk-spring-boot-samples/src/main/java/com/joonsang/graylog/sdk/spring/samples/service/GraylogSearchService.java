@@ -67,7 +67,8 @@ public class GraylogSearchService {
         GraylogQuery query,
         List<Series> seriesList,
         List<SearchTypePivot> rowGroups,
-        List<SearchTypePivot> columnGroups
+        List<SearchTypePivot> columnGroups,
+        SortConfig sort
     ) throws IOException {
 
         return graylogSearch.getTerms(
@@ -77,7 +78,7 @@ public class GraylogSearchService {
             seriesList,
             rowGroups,
             columnGroups,
-            List.of()
+            sort
         );
     }
 
