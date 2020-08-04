@@ -264,9 +264,9 @@ String result = graylogSearch.raw(searchSpec);
 
 ### 1. Outline of Search Spec
 > With a search spec builder, it will generate required IDs automatically if not specified
-* Each search has search ID which is made of [Object ID](https://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html).
-* Each query has query ID which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
-* Each search type has search type ID which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
+* Each search has a search ID, which is made of [Object ID](https://mongodb.github.io/node-mongodb-native/api-bson-generated/objectid.html).
+* Each query has a query ID, which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
+* Each search type has a search type ID, which is made of [UUID](https://docs.mongodb.com/manual/reference/method/UUID/).
 ```
 SearchSpec.builder() /* search ID */
     .query(
@@ -286,7 +286,7 @@ SearchSpec.builder() /* search ID */
 ### 2. Search Specifications
 
 #### 2.1. Search Spec
-> Data implementation of Graylog search UI as below.
+> Data implementation of Graylog search UI as below
 
 ![Graylog Search UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_search_ui.jpg)
 
@@ -377,7 +377,7 @@ SearchQuery.builder()
 ```
 
 #### 2.6. Search Type
-> Data implementation of Graylog widget aggregation UI as below.
+> Data implementation of Graylog widget aggregation UI as below
 
 ![Graylog Widget Aggregation UI](https://github.com/debugrammer/graylog-sdk-spring-boot/blob/2.x/images/graylog_widget_aggregation_ui.jpg)
 
