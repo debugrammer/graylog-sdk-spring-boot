@@ -100,7 +100,7 @@ int pageNo = 1;
 Page<YourMessageObject> messages = (Page<YourMessageObject>) graylogSearch.getMessages(
     List.of("graylog_stream_id"),
     timerange,
-    "message:API_REQUEST_FINISHED",
+    "source:example.org",
     pageSize,
     pageNo,
     sort,
@@ -133,8 +133,7 @@ List<Series> seriesList = List.of(
 List<Statistics> statistics = graylogSearch.getStatistics(
     List.of("graylog_stream_id"),
     timerange,
-    GraylogQuery.builder()
-        .field("message", "API_REQUEST_FINISHED"),
+    "source:example.org",
     seriesList
 );
 ```
@@ -162,21 +161,62 @@ List<Series> seriesList = List.of(
 );
 
 List<SearchTypePivot> columnGroups = List.of(
-    SearchTypePivot.builder().type(SearchTypePivotType.values).field("source").limit(5).build()
+    SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name").limit(5).build()
 );
 
 Histogram histogram = graylogSearch.getHistogram(
     List.of("graylog_stream_id"),
     timerange,
     interval,
-    GraylogQuery.builder()
-        .field("message", "API_REQUEST_FINISHED"),
+    "source:example.org",
     seriesList,
     columnGroups
 );
 ```
 
-#### 1.4. Raw
+#### 1.4. Terms
+Most common field terms of a query using a time range.
+```
+String from = "2020-07-30T00:00:00Z";
+String to = "2020-07-31T00:00:00Z";
+
+Timerange timerange = Timerange.builder()
+    .type(TimeRangeType.absolute)
+    .from(from)
+    .to(to)
+    .build();
+
+List<Series> seriesList = List.of(
+    Series.builder().type(SeriesType.count).build()
+);
+
+List<SearchTypePivot> rowGroups = List.of(
+    SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name_1").limit(10).build(),
+    SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name_2").limit(10).build()
+);
+
+List<SearchTypePivot> columnGroups = List.of(
+    SearchTypePivot.builder().type(SearchTypePivotType.values).field("field_name_3").limit(5).build()
+);
+
+SortConfig sort = SortConfig.builder()
+    .type(SortConfigType.series)
+    .field("count()")
+    .direction(SortConfigDirection.Descending)
+    .build();
+
+graylogSearch.getTerms(
+    List.of("graylog_stream_id"),
+    timerange,
+    "source:example.org",
+    seriesList,
+    rowGroups,
+    columnGroups,
+    sort
+);
+```
+
+#### 1.5. Raw
 Search with a search spec builder, returns raw response message from Graylog.
 ```
 List<SearchFilter> filters = List.of(
@@ -187,7 +227,7 @@ SearchSpec searchSpec = SearchSpec.builder()
     .query(
         Query.builder()
             .filter(Filter.builder().filters(filters).build())
-            .query(SearchQuery.builder().queryString("message:API_REQUEST_FINISHED").build())
+            .query(SearchQuery.builder().queryString("source:example.org").build())
             .timerange(Timerange.builder().type(TimeRangeType.relative).range(300).build())
             .searchType(
                 SearchType.builder()
@@ -392,7 +432,7 @@ avg(field_name):
 ```
 Series.builder()
     .type(SeriesType.avg)
-    .field("field_name")
+    .field("process_time")
     .build();
 ```
 
@@ -401,7 +441,7 @@ percentile(field_name, 95):
 Series.builder()
     .type(SeriesType.percentile)
     .percentile(95.0f)
-    .field("field_name")
+    .field("process_time")
     .build();
 ```
 
