@@ -13,13 +13,13 @@ Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
 <dependency>
   <groupId>com.joonsang.graylog</groupId>
   <artifactId>graylog-sdk-spring-boot-starter</artifactId>
-  <version>2.0.0-beta.2</version>
+  <version>2.0.0-beta.3</version>
 </dependency>
 ```
 
 **Gradle**
 ```
-implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.0-beta.2'
+implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.0-beta.3'
 ```
 
 ## Graylog API Credentials
