@@ -22,7 +22,12 @@ Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
 implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.0-beta.2'
 ```
 
-## 1. Graylog 3.2 Search
+## Graylog API Credentials
+First create user access token on your Graylog web interface for accessing Graylog APIs.
+
+Refer Graylog documentation: [Creating and using Access Token](https://docs.graylog.org/en/latest/pages/configuration/rest_api.html#creating-and-using-access-token)
+
+## Graylog 3.2 Search
 ### Usage
 Configure environment variables for Graylog SDK with `application.properties`:
 ```
@@ -485,7 +490,7 @@ SortConfig.builder()
     .build();
 ```
 
-## 2. Legacy Graylog Search 
+## Legacy Graylog Search 
 > Legacy search APIs will no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
 
 ### Usage
