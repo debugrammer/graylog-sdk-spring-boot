@@ -673,7 +673,7 @@ Terms terms = legacyGraylogSearch.getTerms(
 
 ## Code Examples
 * [graylog-sdk-spring-boot-samples](https://github.com/debugrammer/graylog-sdk-spring-boot/tree/master/graylog-sdk-spring-boot-samples) in this repository contains the project that show you sample API implementations using Graylog SDK with Spring Boot.
-    * Check out [Graylog Query Builder](https://github.com/debugrammer/graylog-query-builder) if you are looking for query builder for Graylog search query.
+    * Check out [Graylog Query Builder](https://github.com/debugrammer/graylog-query-builder) if you are looking for query builder for [Graylog Search Query](https://docs.graylog.org/en/latest/pages/searching/query_language.html).
 
 ## Migration Guide From 1.2.x
 You'll find a guide to upgrade from 1.2.x to 2.x [here](https://github.com/debugrammer/graylog-sdk-spring-boot/releases/tag/2.0.0-beta.0).
