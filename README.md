@@ -512,7 +512,7 @@ SortConfig.builder()
 ```
 
 ## Legacy Graylog Search 
-> Legacy search APIs will no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
+> Legacy search APIs will be no longer available from [Graylog 4.0](https://docs.graylog.org/en/3.3/pages/upgrade/graylog-3.3.html)
 
 ### Usage
 Configure environment variables for Graylog SDK with `application.properties`:
