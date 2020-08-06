@@ -24,28 +24,45 @@ public class Histogram implements Serializable {
 
     private List<HistogramData> histogram;
 
-    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
     @ToString
     public static class HistogramData implements Serializable {
 
+        @Builder
+        public HistogramData(String baseLabel, List<Statistics> statisticsList, List<StackedColumn> stackedColumns) {
+            this.baseLabel = baseLabel;
+            this.statisticsList = statisticsList;
+            this.stackedColumns = stackedColumns;
+        }
+
         @JsonProperty("base_label")
-        private final String baseLabel;
+        private String baseLabel;
 
         @JsonProperty("statistics_list")
-        private final List<Statistics> statisticsList;
+        private List<Statistics> statisticsList;
 
         @JsonProperty("stacked_columns")
-        private final List<StackedColumn> stackedColumns;
+        private List<StackedColumn> stackedColumns;
     }
 
-    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
     @ToString
     public static class StackedColumn implements Serializable {
 
+        @Builder
+        public StackedColumn(List<String> columnLabels, List<Statistics> statisticsList) {
+            this.columnLabels = columnLabels;
+            this.statisticsList = statisticsList;
+        }
+
         @JsonProperty("column_labels")
-        private final List<String> columnLabels;
+        private List<String> columnLabels;
 
         @JsonProperty("statistics_list")
-        private final List<Statistics> statisticsList;
+        private List<Statistics> statisticsList;
     }
 }

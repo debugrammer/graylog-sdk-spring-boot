@@ -24,28 +24,45 @@ public class Terms implements Serializable {
 
     private List<TermsData> terms;
 
-    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
     @ToString
     public static class TermsData implements Serializable {
 
+        @Builder
+        public TermsData(List<String> baseLabels, List<Statistics> statisticsList, List<StackedColumn> stackedColumns) {
+            this.baseLabels = baseLabels;
+            this.statisticsList = statisticsList;
+            this.stackedColumns = stackedColumns;
+        }
+
         @JsonProperty("base_labels")
-        private final List<String> baseLabels;
+        private List<String> baseLabels;
 
         @JsonProperty("statistics_list")
-        private final List<Statistics> statisticsList;
+        private List<Statistics> statisticsList;
 
         @JsonProperty("stacked_columns")
-        private final List<StackedColumn> stackedColumns;
+        private List<StackedColumn> stackedColumns;
     }
 
-    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
     @ToString
     public static class StackedColumn implements Serializable {
 
+        @Builder
+        public StackedColumn(List<String> columnLabels, List<Statistics> statisticsList) {
+            this.columnLabels = columnLabels;
+            this.statisticsList = statisticsList;
+        }
+
         @JsonProperty("column_labels")
-        private final List<String> columnLabels;
+        private List<String> columnLabels;
 
         @JsonProperty("statistics_list")
-        private final List<Statistics> statisticsList;
+        private List<Statistics> statisticsList;
     }
 }
