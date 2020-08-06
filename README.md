@@ -224,20 +224,41 @@ graylogSearch.getTerms(
 #### 1.5. Raw
 Search with a search spec builder, returns raw response message from Graylog.
 ```
-List<SearchFilter> filters = List.of(
-    SearchFilter.builder().id("graylog_stream_id").build()
-);
-
 SearchSpec searchSpec = SearchSpec.builder()
     .query(
         Query.builder()
-            .filter(Filter.builder().filters(filters).build())
-            .query(SearchQuery.builder().queryString("source:example.org").build())
-            .timerange(Timerange.builder().type(TimeRangeType.relative).range(300).build())
+            .filter(
+                Filter.builder()
+                    .filters(
+                        List.of(
+                            SearchFilter.builder()
+                                .id("graylog_stream_id")
+                                .build()
+                        )
+                    )
+                    .build()
+            )
+            .query(
+                SearchQuery.builder()
+                    .queryString("source:example.org")
+                    .build()
+            )
+            .timerange(
+                Timerange.builder()
+                    .type(TimeRangeType.relative)
+                    .range(300)
+                    .build()
+            )
             .searchType(
                 SearchType.builder()
                     .name("chart")
-                    .series(List.of(Series.builder().type(SeriesType.count).build()))
+                    .series(
+                        List.of(
+                            Series.builder()
+                                .type(SeriesType.count)
+                                .build()
+                        )
+                    )
                     .rollup(true)
                     .rowGroups(
                         List.of(
