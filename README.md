@@ -180,6 +180,10 @@ Histogram histogram = graylogSearch.getHistogram(
 ```
 
 #### 1.4. Terms
+> Differences between Quick Values and Graylog 3.2 Data Table
+> * Stacking fields on Legacy Terms (`Quick Values`) means intersecting `stacked fields` by `field` like an INTERSECTION
+> * Adding fields on row groups of Terms (`Data Table`) means combining `fields` by order, like a UNION
+
 Most common field terms of a query using a time range.
 ```
 String from = "2020-07-30T00:00:00Z";
