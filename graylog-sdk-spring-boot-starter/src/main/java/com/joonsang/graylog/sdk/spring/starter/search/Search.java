@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
 import com.joonsang.graylog.sdk.spring.starter.GraylogRequest;
+import com.joonsang.graylog.sdk.spring.starter.GraylogUtils;
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogApiProperties;
 import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypePivotType;
 import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypeType;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -439,23 +441,51 @@ public class Search {
             Statistics statistics = leafFieldValueMap.get(source).get(keyName.toString()).get(field).getStatistics();
 
             if (type.equals(SeriesType.avg.toString())) {
-                statistics.setAverage((Double) valueMap.get("value"));
+                statistics.setAverage(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.card.toString())) {
                 statistics.setCardinality((Integer) valueMap.get("value"));
             } else if (type.equals(SeriesType.count.toString())) {
                 statistics.setCount((Integer) valueMap.get("value"));
             } else if (type.equals(SeriesType.max.toString())) {
-                statistics.setMax((Double) valueMap.get("value"));
+                statistics.setMax(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.min.toString())) {
-                statistics.setMin((Double) valueMap.get("value"));
+                statistics.setMin(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.stddev.toString())) {
-                statistics.setStdDeviation((Double) valueMap.get("value"));
+                statistics.setStdDeviation(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.sum.toString())) {
-                statistics.setSum((Double) valueMap.get("value"));
+                statistics.setSum(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.sumofsquares.toString())) {
-                statistics.setSum((Double) valueMap.get("value"));
+                statistics.setSum(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.variance.toString())) {
-                statistics.setSum((Double) valueMap.get("value"));
+                statistics.setSum(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
             } else if (type.equals(SeriesType.percentile.toString())) {
                 if (statistics.getPercentiles() == null) {
                     statistics.setPercentiles(new ArrayList<>());
@@ -465,7 +495,11 @@ public class Search {
                     statistics.setPercentileRanks(new ArrayList<>());
                 }
 
-                statistics.getPercentiles().add((Double) valueMap.get("value"));
+                statistics.getPercentiles().add(
+                    valueMap.get("value") instanceof BigDecimal
+                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
+                        : (Double) valueMap.get("value")
+                );
                 statistics.getPercentileRanks().add(percentile);
             }
         }
