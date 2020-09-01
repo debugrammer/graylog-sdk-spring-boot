@@ -1,4 +1,4 @@
-package com.joonsang.graylog.sdk.spring.starter.domain;
+package com.joonsang.graylog.sdk.spring.starter.domain.legacy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Field Histogram Domain
+ * Legacy Field Histogram Domain
  * @author debugrammer
  * @since 1.0.0
  */

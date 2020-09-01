@@ -1,139 +1,184 @@
 package com.joonsang.graylog.sdk.spring.starter;
 
 import com.joonsang.graylog.sdk.spring.starter.autoconfigure.GraylogSdkAutoConfiguration;
-import com.joonsang.graylog.sdk.spring.starter.constant.TimeUnit;
+import com.joonsang.graylog.sdk.spring.starter.constant.*;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
-	classes = {
-		GraylogSdkAutoConfiguration.class
-	},
-	properties = {
-		"spring.main.banner-mode=off"
-	}
+    classes = {
+        GraylogSdkAutoConfiguration.class
+    },
+    properties = {
+        "spring.main.banner-mode=off"
+    }
 )
-class GraylogSearchTests {
+public class GraylogSearchTests {
 
-	@Value("${graylog.streamId}")
-	String GRAYLOG_STREAM_ID;
+    @Value("${graylog.streamId}")
+    String GRAYLOG_STREAM_ID;
 
-	@Autowired
-	GraylogSearch graylogSearch;
+    @Autowired
+    GraylogSearch graylogSearch;
 
-	@Test
-	void messages() throws IOException, ReflectiveOperationException {
-		LocalDateTime from = LocalDateTime.now().minusDays(1L);
-		LocalDateTime to = LocalDateTime.now();
+    @Test
+    void messages() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
+        SortConfig sort = SortConfig.builder().field("timestamp").order(SortConfigOrder.DESC).build();
 
-		@SuppressWarnings("unchecked")
-		List<TestMessage> messages = (List<TestMessage>) graylogSearch.getMessages(
-			GRAYLOG_STREAM_ID,
-			from,
-			to,
-			"message:API_REQUEST_FINISHED",
-			TestMessage.class
-		);
+        @SuppressWarnings("unchecked")
+        Page<TestMessage> messages = (Page<TestMessage>) graylogSearch.getMessages(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            "message:API_REQUEST_FINISHED",
+            10,
+            1,
+            sort,
+            TestMessage.class
+        );
 
-		assertThat(messages).isNotEmpty();
-	}
+        assertThat(messages).isNotNull();
+    }
 
-	@Test
-	void pagedMessages() throws IOException, ReflectiveOperationException {
-		LocalDateTime from = LocalDateTime.now().minusDays(2L);
-		LocalDateTime to = LocalDateTime.now().minusDays(1L);
+    @Test
+    void statistics() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
 
-		@SuppressWarnings("unchecked")
-		Page<TestMessage> pagedMessages = (Page<TestMessage>) graylogSearch.getMessages(
-			GRAYLOG_STREAM_ID,
-			from,
-			to,
-			"message:API_REQUEST_FINISHED",
-			5,
-			1,
-			TestMessage.class
-		);
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.avg).field("process_time").build(),
+            Series.builder().type(SeriesType.count).field("process_time").build(),
+            Series.builder().type(SeriesType.min).field("process_time").build(),
+            Series.builder().type(SeriesType.max).field("process_time").build(),
+            Series.builder().type(SeriesType.percentile).percentile(95.0f).field("process_time").build(),
+            Series.builder().type(SeriesType.percentile).percentile(99.0f).field("process_time").build(),
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.card).field("source").build()
+        );
 
-		assertThat(pagedMessages.getList()).isNotEmpty();
-		assertThat(pagedMessages.getTotalCount()).isNotZero();
-	}
+        List<Statistics> statistics = graylogSearch.getStatistics(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            "message:API_REQUEST_FINISHED",
+            seriesList
+        );
 
-	@Test
-	void statistics() throws IOException {
-		LocalDateTime from = LocalDateTime.now().minusDays(1L);
-		LocalDateTime to = LocalDateTime.now();
+        assertThat(statistics).isNotNull();
+    }
 
-		Statistics statistics = graylogSearch.getStatistics(
-			GRAYLOG_STREAM_ID,
-			"process_time",
-			from,
-			to,
-			"message:API_REQUEST_FINISHED"
-		);
+    @Test
+    void terms() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
 
-		assertThat(statistics).isNotNull();
-	}
+        SortConfig sort = SortConfig.builder()
+            .type(SortConfigType.series)
+            .field("count()")
+            .direction(SortConfigDirection.Descending)
+            .build();
 
-	@Test
-	void histogram() throws IOException {
-		LocalDateTime from = LocalDateTime.now().minusDays(1L);
-		LocalDateTime to = LocalDateTime.now();
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.avg).field("process_time").build()
+        );
 
-		Histogram histogram = graylogSearch.getHistogram(
-			GRAYLOG_STREAM_ID,
-			TimeUnit.HOUR,
-			from,
-			to,
-			"message:API_REQUEST_FINISHED"
-		);
+        List<SearchTypePivot> rowGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_id").limit(10).build(),
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("client_name").limit(10).build()
+        );
 
-		assertThat(histogram).isNotNull();
-	}
+        List<SearchTypePivot> columnGroups = List.of(
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("grant_type").limit(5).build(),
+            SearchTypePivot.builder().type(SearchTypePivotType.values).field("token_policy").limit(5).build()
+        );
 
-	@Test
-	void fieldHistogram() throws IOException {
-		LocalDateTime from = LocalDateTime.now().minusDays(1L);
-		LocalDateTime to = LocalDateTime.now();
+        Terms terms = graylogSearch.getTerms(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            "message:API_REQUEST_FINISHED",
+            seriesList,
+            rowGroups,
+            columnGroups,
+            sort
+        );
 
-		FieldHistogram fieldHistogram = graylogSearch.getFieldHistogram(
-			GRAYLOG_STREAM_ID,
-			"process_time",
-			TimeUnit.HOUR,
-			from,
-			to,
-			"message:API_REQUEST_FINISHED"
-		);
+        assertThat(terms).isNotNull();
+    }
 
-		assertThat(fieldHistogram).isNotNull();
-	}
+    @Test
+    void histogram() throws IOException {
+        Timerange timerange = Timerange.builder().type(TimeRangeType.relative).range(300).build();
 
-	@Test
-	void terms() throws IOException {
-		LocalDateTime from = LocalDateTime.now().minusDays(1L);
-		LocalDateTime to = LocalDateTime.now();
+        Interval interval = Interval.builder()
+            .type(IntervalType.timeunit)
+            .timeunit(IntervalTimeunit.get(IntervalTimeunit.Unit.minutes, 1))
+            .build();
 
-		Terms terms = graylogSearch.getTerms(
-			GRAYLOG_STREAM_ID,
-			"process_time",
-			StringUtils.EMPTY,
-			5,
-			from,
-			to,
-			false,
-			false,
-			"message:API_REQUEST_FINISHED"
-		);
+        List<Series> seriesList = List.of(
+            Series.builder().type(SeriesType.count).build(),
+            Series.builder().type(SeriesType.avg).field("process_time").build()
+        );
 
-		assertThat(terms).isNotNull();
-	}
+        List<SearchTypePivot> columnGroups = List.of();
+
+        Histogram histogram = graylogSearch.getHistogram(
+            List.of(GRAYLOG_STREAM_ID),
+            timerange,
+            interval,
+            "message:API_REQUEST_FINISHED",
+            seriesList,
+            columnGroups
+        );
+
+        assertThat(histogram).isNotNull();
+    }
+
+    @Test
+    void raw() throws IOException {
+        List<String> streamIds = List.of(GRAYLOG_STREAM_ID);
+
+        List<SearchFilter> filters = streamIds.stream()
+            .map(streamId -> SearchFilter.builder().id(streamId).build())
+            .collect(Collectors.toList());
+
+        SearchSpec searchSpec = SearchSpec.builder()
+            .query(
+                Query.builder()
+                    .filter(Filter.builder().filters(filters).build())
+                    .query(SearchQuery.builder().queryString("message:API_REQUEST_FINISHED").build())
+                    .timerange(Timerange.builder().type(TimeRangeType.relative).range(300).build())
+                    .searchType(
+                        SearchType.builder()
+                            .name("chart")
+                            .series(List.of(Series.builder().type(SeriesType.count).build()))
+                            .rollup(true)
+                            .rowGroups(
+                                List.of(
+                                    SearchTypePivot.builder()
+                                        .type(SearchTypePivotType.values)
+                                        .field("client_name")
+                                        .limit(15)
+                                        .build()
+                                )
+                            )
+                            .columnGroups(List.of())
+                            .sort(List.of())
+                            .type(SearchTypeType.pivot)
+                            .build()
+                    )
+                    .build()
+            )
+            .build();
+
+        String result = graylogSearch.raw(searchSpec);
+
+        assertThat(result).isNotNull();
+    }
 }

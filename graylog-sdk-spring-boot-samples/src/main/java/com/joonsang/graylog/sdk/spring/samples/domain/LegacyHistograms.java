@@ -1,6 +1,6 @@
 package com.joonsang.graylog.sdk.spring.samples.domain;
 
-import com.joonsang.graylog.sdk.spring.starter.domain.Histogram;
+import com.joonsang.graylog.sdk.spring.starter.domain.legacy.Histogram;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +9,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Histograms {
+public class LegacyHistograms {
 
     @Builder
-    public Histograms(List<String> labels, List<Histogram> histograms) {
+    public LegacyHistograms(List<String> labels, List<Histogram> histograms) {
         this.labels = labels;
         this.histograms = histograms;
     }

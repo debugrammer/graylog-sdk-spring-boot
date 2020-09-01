@@ -3,6 +3,7 @@ package com.joonsang.graylog.sdk.spring.starter;
 import com.jayway.jsonpath.JsonPath;
 import com.joonsang.graylog.sdk.spring.starter.constant.TimeUnit;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +29,20 @@ public class GraylogUtils {
         } catch (NumberFormatException nfe) {
             return Double.NaN;
         }
+    }
+
+    /**
+     * Parse Big Decimal number to Double.
+     * @param number Big Decimal number
+     * @return Parsed Double value
+     * @since 2.0.0
+     */
+    public static Double parseBigDecimalToDouble(BigDecimal number) {
+        if (number == null) {
+            return null;
+        }
+
+        return number.doubleValue();
     }
 
     /**
