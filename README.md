@@ -13,13 +13,13 @@ Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
 <dependency>
   <groupId>com.joonsang.graylog</groupId>
   <artifactId>graylog-sdk-spring-boot-starter</artifactId>
-  <version>2.0.0-beta.5</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
 **Gradle**
 ```
-implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.0-beta.5'
+implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.0'
 ```
 
 ## Graylog API Credentials
@@ -680,4 +680,4 @@ Terms terms = legacyGraylogSearch.getTerms(
     * Check out [Graylog Query Builder](https://github.com/debugrammer/graylog-query-builder) if you are looking for query builder for [Graylog Search Query](https://docs.graylog.org/en/latest/pages/searching/query_language.html).
 
 ## Migration Guide From 1.2.x
-You'll find a guide to upgrade from 1.2.x to 2.x [here](https://github.com/debugrammer/graylog-sdk-spring-boot/releases/tag/2.0.0-beta.0).
+You'll find a guide to upgrade from 1.2.x to 2.x [here](https://github.com/debugrammer/graylog-sdk-spring-boot/releases/tag/2.0.0).
