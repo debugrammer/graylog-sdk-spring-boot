@@ -8,11 +8,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-json'
 
-    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.14'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
     implementation group: 'com.joonsang.graylog', name: 'graylog-query-builder', version: '1.0.3'
 
     implementation project(':graylog-sdk-spring-boot-starter')
 
-    annotationProcessor("org.projectlombok:lombok:1.18.12")
+    annotationProcessor("org.projectlombok:lombok:1.18.14")
 }
