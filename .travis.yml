@@ -7,12 +7,10 @@ jdk:
   - oraclejdk12
   - oraclejdk13
   - oraclejdk14
-  - oraclejdk15
   - openjdk11
   - openjdk12
   - openjdk13
   - openjdk14
-  - openjdk15
 
 install: skip
 
