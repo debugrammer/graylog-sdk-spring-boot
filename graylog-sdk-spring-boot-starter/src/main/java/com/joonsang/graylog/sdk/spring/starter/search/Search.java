@@ -441,51 +441,23 @@ public class Search {
             Statistics statistics = leafFieldValueMap.get(source).get(keyName.toString()).get(field).getStatistics();
 
             if (type.equals(SeriesType.avg.toString())) {
-                statistics.setAverage(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setAverage(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.card.toString())) {
-                statistics.setCardinality((Integer) valueMap.get("value"));
+                statistics.setCardinality(GraylogUtils.valueToInteger(valueMap.get("value")));
             } else if (type.equals(SeriesType.count.toString())) {
-                statistics.setCount((Integer) valueMap.get("value"));
+                statistics.setCount(GraylogUtils.valueToInteger(valueMap.get("value")));
             } else if (type.equals(SeriesType.max.toString())) {
-                statistics.setMax(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setMax(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.min.toString())) {
-                statistics.setMin(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setMin(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.stddev.toString())) {
-                statistics.setStdDeviation(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setStdDeviation(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.sum.toString())) {
-                statistics.setSum(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setSum(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.sumofsquares.toString())) {
-                statistics.setSum(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setSum(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.variance.toString())) {
-                statistics.setSum(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.setSum(GraylogUtils.valueToDouble(valueMap.get("value")));
             } else if (type.equals(SeriesType.percentile.toString())) {
                 if (statistics.getPercentiles() == null) {
                     statistics.setPercentiles(new ArrayList<>());
@@ -495,11 +467,7 @@ public class Search {
                     statistics.setPercentileRanks(new ArrayList<>());
                 }
 
-                statistics.getPercentiles().add(
-                    valueMap.get("value") instanceof BigDecimal
-                        ? GraylogUtils.parseBigDecimalToDouble((BigDecimal) valueMap.get("value"))
-                        : (Double) valueMap.get("value")
-                );
+                statistics.getPercentiles().add(GraylogUtils.valueToDouble(valueMap.get("value")));
                 statistics.getPercentileRanks().add(percentile);
             }
         }

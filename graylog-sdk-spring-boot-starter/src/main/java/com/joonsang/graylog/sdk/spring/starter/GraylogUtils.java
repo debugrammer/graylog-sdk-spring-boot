@@ -32,17 +32,101 @@ public class GraylogUtils {
     }
 
     /**
-     * Parse Big Decimal number to Double.
-     * @param number Big Decimal number
-     * @return Parsed Double value
-     * @since 2.0.0
+     * Convert maybe number value to Double.
+     * @param value maybe number value
+     * @return Converted Double value
+     * @since 2.0.1
      */
-    public static Double parseBigDecimalToDouble(BigDecimal number) {
-        if (number == null) {
+    public static Double valueToDouble(Object value) {
+        if (value == null) {
             return null;
         }
 
-        return number.doubleValue();
+        if (value instanceof BigDecimal) {
+            BigDecimal bigDecimalVal = (BigDecimal) value;
+
+            return bigDecimalVal.doubleValue();
+        }
+
+        if (value instanceof Long) {
+            Long longVal = (Long) value;
+
+            return longVal.doubleValue();
+        }
+
+        if (value instanceof Float) {
+            Float floatVal = (Float) value;
+
+            return floatVal.doubleValue();
+        }
+
+        if (value instanceof String) {
+            String stringVal = (String) value;
+
+            try {
+                return Double.valueOf(stringVal);
+            } catch (NumberFormatException nfe) {
+                return Double.NaN;
+            }
+        }
+
+        try {
+            return (Double) value;
+        } catch (ClassCastException cce) {
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Convert maybe number value to Integer.
+     * @param value maybe number value
+     * @return Converted Integer value
+     * @since 2.0.1
+     */
+    public static Integer valueToInteger(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof BigDecimal) {
+            BigDecimal bigDecimalVal = (BigDecimal) value;
+
+            return bigDecimalVal.intValue();
+        }
+
+        if (value instanceof Long) {
+            Long longVal = (Long) value;
+
+            return longVal.intValue();
+        }
+
+        if (value instanceof Double) {
+            Double doubleVal = (Double) value;
+
+            return doubleVal.intValue();
+        }
+
+        if (value instanceof Float) {
+            Float floatVal = (Float) value;
+
+            return floatVal.intValue();
+        }
+
+        if (value instanceof String) {
+            String stringVal = (String) value;
+
+            try {
+                return Integer.valueOf(stringVal);
+            } catch (NumberFormatException nfe) {
+                return 0;
+            }
+        }
+
+        try {
+            return (Integer) value;
+        } catch (ClassCastException cce) {
+            return 0;
+        }
     }
 
     /**
