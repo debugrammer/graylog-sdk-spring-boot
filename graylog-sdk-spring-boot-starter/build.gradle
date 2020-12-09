@@ -85,20 +85,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.14'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
-    implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     implementation group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.0.1'
-    implementation group: 'org.mongodb', name: 'bson', version: '4.1.0'
+    implementation group: 'org.mongodb', name: 'bson', version: '4.1.1'
 
-    annotationProcessor("org.projectlombok:lombok:1.18.14")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.14")
+    annotationProcessor("org.projectlombok:lombok:1.18.16")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.16")
 }
 
 test {
