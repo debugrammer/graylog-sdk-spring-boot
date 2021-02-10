@@ -22,6 +22,13 @@ Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
 implementation group: 'com.joonsang.graylog', name: 'graylog-sdk-spring-boot-starter', version: '2.0.1'
 ```
 
+## Troubleshooting
+* Exception occurred: `java.lang.NoSuchMethodError: 'okhttp3.RequestBody okhttp3.RequestBody.create(java.lang.String, okhttp3.MediaType)'`
+  * There is an OkHttp3 version under 4.x somewhere in your project dependencies.
+  * Add OkHttp3 4.x in your dependency like below.
+    * `implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.x.x'`
+  * https://github.com/debugrammer/graylog-sdk-spring-boot/issues/3
+
 ## Graylog API Credentials
 First create user access token on your Graylog web interface for accessing Graylog APIs.
 
