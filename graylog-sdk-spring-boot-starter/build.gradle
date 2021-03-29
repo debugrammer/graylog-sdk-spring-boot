@@ -90,10 +90,10 @@ dependencies {
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.1'
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
-    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.0.1'
-    implementation group: 'org.mongodb', name: 'bson', version: '4.2.0'
+    implementation group: 'org.mongodb', name: 'bson', version: '4.2.2'
 
     annotationProcessor("org.projectlombok:lombok:1.18.18")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.18")
