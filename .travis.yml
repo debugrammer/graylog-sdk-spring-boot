@@ -4,11 +4,6 @@ os: linux
 
 jdk:
   - openjdk11
-  - openjdk12
-  - openjdk13
-  - openjdk14
-  - openjdk15
-  - openjdk16
   - openjdk17
 
 install: skip
