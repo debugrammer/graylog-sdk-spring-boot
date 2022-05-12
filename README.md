@@ -3,7 +3,7 @@
 
 [![Build Status](https://app.travis-ci.com/debugrammer/graylog-sdk-spring-boot.svg?branch=master)](https://app.travis-ci.com/github/debugrammer/graylog-sdk-spring-boot)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.joonsang.graylog/graylog-sdk-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.joonsang.graylog/graylog-sdk-spring-boot-starter)
-[![Javadoc](https://javadoc-badge.appspot.com/com.joonsang.graylog/graylog-sdk-spring-boot-starter.svg?label=javadoc)](https://javadoc-badge.appspot.com/com.joonsang.graylog/graylog-sdk-spring-boot-starter)
+[![javadoc](https://javadoc.io/badge2/com.joonsang.graylog/graylog-sdk-spring-boot-starter/javadoc.svg)](https://javadoc.io/doc/com.joonsang.graylog/graylog-sdk-spring-boot-starter)
 
 ## Getting Started
 Graylog SDK Spring Boot Starter is available at the Central Maven Repository.
