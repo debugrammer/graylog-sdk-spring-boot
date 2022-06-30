@@ -10,6 +10,7 @@ import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypePivotType;
 import com.joonsang.graylog.sdk.spring.starter.constant.SearchTypeType;
 import com.joonsang.graylog.sdk.spring.starter.constant.SeriesType;
 import com.joonsang.graylog.sdk.spring.starter.domain.*;
+import com.joonsang.graylog.sdk.spring.starter.exception.GraylogServerException;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -17,9 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Search
@@ -85,6 +86,8 @@ public class Search {
 
         String body = syncSearch(SearchSpec.builder().query(query).build());
 
+        validateSearchResult(body, query.getId());
+
         String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId();
 
         @SuppressWarnings("unchecked")
@@ -132,6 +135,8 @@ public class Search {
             .build();
 
         String body = syncSearch(SearchSpec.builder().query(query).build());
+
+        validateSearchResult(body, query.getId());
 
         String searchQueryPath = "$.results." + query.getId() + ".query.search_types[0].series";
         String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId() + ".rows[0].values";
@@ -190,6 +195,8 @@ public class Search {
             .build();
 
         String body = syncSearch(SearchSpec.builder().query(query).build());
+
+        validateSearchResult(body, query.getId());
 
         String searchQueryPath = "$.results." + query.getId() + ".query.search_types[0].series";
         String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId() + ".rows";
@@ -293,6 +300,8 @@ public class Search {
             .build();
 
         String body = syncSearch(SearchSpec.builder().query(query).build());
+
+        validateSearchResult(body, query.getId());
 
         String searchQueryPath = "$.results." + query.getId() + ".query.search_types[0].series";
         String searchResultPath = "$.results." + query.getId() + ".search_types." + searchType.getId() + ".rows";
@@ -402,7 +411,7 @@ public class Search {
         for (Map<String, ?> valueMap : values) {
             String source = (String) valueMap.get("source");
 
-            if (List.of("row-leaf", "col-leaf").stream().noneMatch(source::equals)) {
+            if (Stream.of("row-leaf", "col-leaf").noneMatch(source::equals)) {
                 continue;
             }
 
@@ -427,18 +436,18 @@ public class Search {
             String type = keyMap.get(id).get("type");
             String percentile = keyMap.get(id).get("percentile");
 
-            if (!leafFieldValueMap.get(source).containsKey(keyName.toString())) {
-                leafFieldValueMap.get(source).put(keyName.toString(), new HashMap<>());
+            if (!Objects.requireNonNull(leafFieldValueMap.get(source)).containsKey(keyName.toString())) {
+                Objects.requireNonNull(leafFieldValueMap.get(source)).put(keyName.toString(), new HashMap<>());
             }
 
-            if (!leafFieldValueMap.get(source).get(keyName.toString()).containsKey(field)) {
-                leafFieldValueMap.get(source).get(keyName.toString()).put(field, new Value());
-                leafFieldValueMap.get(source).get(keyName.toString()).get(field).setLabels(columnLabels);
-                leafFieldValueMap.get(source).get(keyName.toString()).get(field).setStatistics(new Statistics());
-                leafFieldValueMap.get(source).get(keyName.toString()).get(field).getStatistics().setField(field);
+            if (!Objects.requireNonNull(leafFieldValueMap.get(source)).get(keyName.toString()).containsKey(field)) {
+                Objects.requireNonNull(leafFieldValueMap.get(source)).get(keyName.toString()).put(field, new Value());
+                Objects.requireNonNull(leafFieldValueMap.get(source)).get(keyName.toString()).get(field).setLabels(columnLabels);
+                Objects.requireNonNull(leafFieldValueMap.get(source)).get(keyName.toString()).get(field).setStatistics(new Statistics());
+                Objects.requireNonNull(leafFieldValueMap.get(source)).get(keyName.toString()).get(field).getStatistics().setField(field);
             }
 
-            Statistics statistics = leafFieldValueMap.get(source).get(keyName.toString()).get(field).getStatistics();
+            Statistics statistics = Objects.requireNonNull(leafFieldValueMap.get(source)).get(keyName.toString()).get(field).getStatistics();
 
             if (type.equals(SeriesType.avg.toString())) {
                 statistics.setAverage(GraylogUtils.valueToDouble(valueMap.get("value")));
@@ -487,5 +496,25 @@ public class Search {
             .collect(Collectors.toList());
 
         return Filter.builder().filters(filters).build();
+    }
+
+    /**
+     * Check if search result is successful.
+     * @param body JSON body
+     * @param queryId Query ID
+     * @throws GraylogServerException Search result not successful
+     * @since 2.0.2
+     */
+    private void validateSearchResult(String body, String queryId) throws GraylogServerException {
+        Boolean completedExceptionally = JsonPath.parse(body).read("$.execution.completed_exceptionally");
+
+        if (!completedExceptionally) {
+            return;
+        }
+
+        String searchState = JsonPath.parse(body).read("$.results." + queryId + ".state");
+        String errors = JsonPath.parse(body).read("$.results." + queryId + ".errors").toString();
+
+        throw new GraylogServerException("Search " + searchState + ": " + errors);
     }
 }
