@@ -10,7 +10,7 @@ repositories {
 
 subprojects {
     group = 'com.joonsang.graylog'
-    version = '2.0.2'
+    version = '2.0.4'
     sourceCompatibility = '11'
 
     repositories {
@@ -27,4 +27,6 @@ bootJar {
 
 jar {
     enabled = true
+    archiveClassifier.set('')
+    exclude('application.properties', 'sample.application.properties')
 }

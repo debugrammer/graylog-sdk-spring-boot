@@ -503,7 +503,7 @@ public class Search {
      * @param body JSON body
      * @param queryId Query ID
      * @throws GraylogServerException Search result not successful
-     * @since 2.0.2
+     * @since 2.0.4
      */
     private void validateSearchResult(String body, String queryId) throws GraylogServerException {
         Boolean completedExceptionally = JsonPath.parse(body).read("$.execution.completed_exceptionally");
