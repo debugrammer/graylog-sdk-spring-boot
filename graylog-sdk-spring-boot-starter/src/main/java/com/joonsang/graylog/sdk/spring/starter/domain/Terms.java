@@ -22,6 +22,7 @@ public class Terms implements Serializable {
         this.terms = terms;
     }
 
+    @JsonProperty("terms")
     private List<TermsData> terms;
 
     @Getter

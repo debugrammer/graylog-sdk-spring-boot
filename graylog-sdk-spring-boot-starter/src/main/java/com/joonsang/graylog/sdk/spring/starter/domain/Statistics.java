@@ -18,21 +18,27 @@ import java.util.List;
 @ToString
 public class Statistics implements Serializable {
 
+    @JsonProperty("field")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String field;
 
+    @JsonProperty("average")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double average;
 
+    @JsonProperty("cardinality")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Integer cardinality;
 
+    @JsonProperty("count")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Integer count;
 
+    @JsonProperty("max")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double max;
 
+    @JsonProperty("min")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double min;
 
@@ -40,6 +46,7 @@ public class Statistics implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double stdDeviation;
 
+    @JsonProperty("sum")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double sum;
 
@@ -47,9 +54,11 @@ public class Statistics implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double sumOfSquares;
 
+    @JsonProperty("variance")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Double variance;
 
+    @JsonProperty("percentiles")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Double> percentiles;
 

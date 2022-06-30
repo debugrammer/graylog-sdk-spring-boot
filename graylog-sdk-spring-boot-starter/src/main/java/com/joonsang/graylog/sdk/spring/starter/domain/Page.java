@@ -39,6 +39,7 @@ public class Page<E> {
     private Integer totalPageCount;
 
     @Getter
+    @JsonProperty("list")
     private List<E> list;
 
     public double getTotalPageCount() {

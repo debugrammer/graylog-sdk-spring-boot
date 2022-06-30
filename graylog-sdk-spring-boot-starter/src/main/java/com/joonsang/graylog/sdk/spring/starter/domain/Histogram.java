@@ -22,6 +22,7 @@ public class Histogram implements Serializable {
         this.histogram = histogram;
     }
 
+    @JsonProperty("histogram")
     private List<HistogramData> histogram;
 
     @Getter
