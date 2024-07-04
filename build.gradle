@@ -10,7 +10,7 @@ repositories {
 
 subprojects {
     group = 'com.joonsang.graylog'
-    version = '2.0.5'
+    version = '2.0.6'
     sourceCompatibility = '11'
 
     repositories {
